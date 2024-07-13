@@ -1,21 +1,19 @@
-﻿.left-side-text {
-    display: flex;
-    justify-content: flex-start;
-    width: 50%;
-}
-
-.right-side-text {
-    display: flex;
-    justify-content: flex-end;
-    width: 50%;
-}
-
-.main-node {
+﻿.main-node {
     justify-content: space-between;
     flex-direction: row;
+
+    height: 50vh;
+    width: 100%;
+}
+
+.main-node > div {
+    display: inline-flex;
+
+    width: 50vh;
+    height: 50vh;
 }
 
 .gym-layout-image {
     width: 100%;
-    height: 45%;
+    height: 100%;
 }

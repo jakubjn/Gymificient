@@ -1,16 +1,25 @@
 ﻿@page "/dashboard/{machineName}"
 
-<div class="accordion-header" style="margin-bottom: 50px">
-    <h1 style="text-align: center">@machineName</h1>
+<div class="card-header header align-content-center">
+    <h1 class="text-center align-text-top"><strong>@machineName</strong></h1>
 </div>
 
 <div class="d-lg-inline-flex stat-image-display"> 
     <div>
-        <span>Machine Usage:</span>
-        <span>Last Serviced:</span>
-        <span>Warranty:</span>
+        <div class="d-inline-block">
+            <span>Machine Usage:</span>
+            <span>XX%</span>
+        </div>
 
-        
+        <div class="d-inline-block">
+             <span>Last Serviced:</span>
+             <input type="date" />
+        </div>
+
+        <div class="d-inline-block">
+            <span>Warranty:</span>
+            <input type="date" />
+        </div>   
     </div>
 
     <div>
@@ -18,7 +27,15 @@
     </div>
 </div>
 
+<div class="card-header header">
+    <h2 style="text-align: center">Past Problems</h2>
+</div>
+
+<div class="d-lg-inline-flex">
+
+</div>
+
 @code {
     [Parameter]
-    public string? machineName {get; set;}
+    public string? machineName { get; set; }
 }
