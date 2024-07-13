@@ -1,0 +1,25 @@
+﻿@namespace GymSystem.Components
+
+<div class=@objClass>
+    @if(machineData is not null)
+    {
+        <button @onclick="@(() => ClickHandler(machineData))">
+            <img class="btn" src=@machineData.displayImageURL style="max-height: 70%; max-width: 70%"/>
+            <h3 style="padding-block"> @machineData.machineName </h3>
+        </button>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public MachineData? machineData { get; set; }
+    [Parameter]
+    public string? objClass { get; set; }
+    [Parameter]
+    public EventCallback<MachineData> OnClick { get; set; }
+
+    private async Task ClickHandler(MachineData data)
+    {
+        await OnClick.InvokeAsync(machineData);
+    }
+}

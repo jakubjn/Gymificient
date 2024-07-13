@@ -1,0 +1,19 @@
+﻿@namespace GymSystem.Components
+@inject NavigationManager navManager;
+
+<div class="grid-container justify-content-around">
+    @foreach(MachineData machine in machines)
+    {
+        <GymDisplay objClass="col" machineData="@machine" OnClick="@((MachineData data) => OnClick(data))"/>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public List<MachineData> machines { get; set; }
+
+    public void OnClick(MachineData data)
+    {
+        navManager.NavigateTo("dashboard/" + data.machineName);
+    }
+}

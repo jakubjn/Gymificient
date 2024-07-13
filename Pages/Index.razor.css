@@ -1,0 +1,21 @@
+﻿.left-side-text {
+    display: flex;
+    justify-content: flex-start;
+    width: 50%;
+}
+
+.right-side-text {
+    display: flex;
+    justify-content: flex-end;
+    width: 50%;
+}
+
+.main-node {
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.gym-layout-image {
+    width: 100%;
+    height: 45%;
+}

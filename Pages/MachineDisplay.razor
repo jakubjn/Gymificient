@@ -1,0 +1,24 @@
+﻿@page "/dashboard/{machineName}"
+
+<div class="accordion-header" style="margin-bottom: 50px">
+    <h1 style="text-align: center">@machineName</h1>
+</div>
+
+<div class="d-lg-inline-flex stat-image-display"> 
+    <div>
+        <span>Machine Usage:</span>
+        <span>Last Serviced:</span>
+        <span>Warranty:</span>
+
+        
+    </div>
+
+    <div>
+        <img style="width:100%; height: 100%" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.esellerpro.com%2F2347%2FI%2F948%2F88%2FMan-Performing-Bench-Press-on-Mirafit-M1-Adjustable-Folding-Weight-Bench-with-Dip-Station.jpg&f=1&nofb=1&ipt=ef8111c2ea77d3337890bdb7674ae6d24550249b2a8f476f08c602b8de3b1e12&ipo=images" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? machineName {get; set;}
+}

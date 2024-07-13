@@ -1,0 +1,54 @@
+﻿@page "/dashboard"
+
+<div>
+    <h1 style="text-align: center"> <strong> Dashboard </strong></h1>
+</div>
+
+<br />
+<br />
+
+<GymGrid machines=@machines />
+
+@code {
+    MachineData sampleMachine1 = new MachineData()
+        {
+            machineName = "Bench Press",
+            utilization = 90,
+            displayImageURL = ""
+        };
+
+    MachineData sampleMachine2 = new MachineData()
+        {
+            machineName = "Shoulder Press",
+            utilization = 60,
+            displayImageURL = ""
+        };
+
+    MachineData sampleMachine3 = new MachineData()
+        {
+            machineName = "Leg Press",
+            utilization = 70,
+            displayImageURL = ""
+        };
+
+    MachineData sampleMachine4 = new MachineData()
+        {
+            machineName = "Hamstring Curler",
+            utilization = 30,
+            displayImageURL = ""
+        };
+
+    MachineData sampleMachine5 = new MachineData()
+        {
+            machineName = "Bicep Curler",
+            utilization = 30,
+            displayImageURL = ""
+        };
+
+    public List<MachineData> machines;
+
+    protected override async Task OnInitializedAsync()
+    {
+        machines = new List<MachineData> { sampleMachine1, sampleMachine2, sampleMachine3 , sampleMachine4, sampleMachine5};
+    }
+}
