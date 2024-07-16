@@ -1,11 +1,15 @@
 ﻿@namespace GymSystem.Components
 @inject NavigationManager navManager;
 
-<div class="grid-container justify-content-around">
-    @foreach(MachineData machine in machines)
-    {
-        <GymDisplay objClass="col" machineData="@machine" OnClick="@((MachineData data) => OnClick(data))"/>
-    }
+<div class="container" style="width:60%">
+    <div class="d-grid pt-2" style="row-gap: 50px; ">
+        @foreach (MachineData machine in machines)
+        {
+            <div class="row col">
+                <GymDisplay machineData="@machine" OnClick="@((MachineData data) => OnClick(data))" />
+            </div>
+        }
+    </div>
 </div>
 
 @code {

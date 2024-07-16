@@ -1,0 +1,37 @@
+﻿@page "/dashboard/{machineName}/problems"
+
+<EditForm Model="newProblem" OnSubmit="OnSubmit">
+    <div>
+        <label>
+            Date:
+            <br />
+            <InputDate @bind-Value="newProblem!.Date" />
+        </label>
+    </div>
+
+    <br />
+
+    <div>
+        <label>
+            Problem:
+            <br />
+            <InputTextArea @bind-Value="newProblem!.Problem"/>
+        </label>
+    </div>
+
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public string? machineName { get; set; }
+
+    MachineProblem newProblem = new MachineProblem();
+
+    private void OnSubmit()
+    {
+        
+    }
+}

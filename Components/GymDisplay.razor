@@ -1,14 +1,12 @@
 ﻿@namespace GymSystem.Components
 
-<div class=@objClass>
     @if(machineData is not null)
     {
         <button @onclick="@(() => ClickHandler(machineData))">
-            <img class="btn" src=@machineData.displayImageURL style="max-height: 70%; max-width: 70%"/>
+            <img src=@machineData.displayImageURL style="width: 70%"/>
             <h3 style="padding-block"> @machineData.machineName </h3>
         </button>
     }
-</div>
 
 @code {
     [Parameter]

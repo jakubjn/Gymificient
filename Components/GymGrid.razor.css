@@ -1,12 +1,10 @@
 ﻿.grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 15vw);
-    grid-template-rows: max-content;
-    text-align: center;
     grid-gap: 50px;
-}
+    grid-auto-columns: max-content;
+    grid-auto-rows: max-content;
+} 
 
 .grid-container > div {
-    text-align: center;
     padding: 20px;
 }

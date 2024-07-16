@@ -1,10 +1,11 @@
 ﻿@page "/dashboard/{machineName}"
+@inject NavigationManager navManager
 
-<div class="card-header header align-content-center">
-    <h1 class="text-center align-text-top"><strong>@machineName</strong></h1>
+<div class="card-header" style="height: fit-content; height: fit-content">
+    <h1 class="text-center" style="justify-self: center;"><strong>@machineName</strong></h1>
 </div>
 
-<div class="d-lg-inline-flex stat-image-display"> 
+<div class="d-lg-inline-flex stat-image-display p-lg-5" style="height: fit-content">
     <div>
         <div class="d-inline-block">
             <span>Machine Usage:</span>
@@ -27,15 +28,43 @@
     </div>
 </div>
 
-<div class="card-header header">
-    <h2 style="text-align: center">Past Problems</h2>
-</div>
+<br />
+<br />
 
-<div class="d-lg-inline-flex">
+<div class="table_class">
+    <table class="table align-content-between" style="width:100%"> 
+        <thead style="width:100%">
+            <tr style="width:100%">
+                <th scope="col">Date</th>
+                <th scope="col">Problem</th>
 
+                <button class="btn align-items-end" type="button" @onclick="OnClick">New problem</button>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                @if(problems is not null)
+                {
+                    @foreach (MachineProblem problem in problems)
+                    {
+                        <th scope="row">@problem.Date</th>
+                        <td>@problem.Problem</td>
+                    }
+                }
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 @code {
     [Parameter]
     public string? machineName { get; set; }
+
+    public List<MachineProblem> problems;
+
+    private void OnClick()
+    {
+        navManager.NavigateTo("/dashboard/" + machineName + "/problems");
+    }
 }

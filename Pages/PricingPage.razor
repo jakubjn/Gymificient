@@ -1,4 +1,33 @@
 ﻿@page "/pricing"
 
-<h3 style="text-align: center">This is the page where you buy our product</h3>
+<section class="border p-4 bg-light">
+    <h2>€89</h2>
+    <p>Basic Package</p>
 
+    <form method="post">
+        <input type="hidden" name="_handler" value="checkout">
+
+        <button type="submit" class="btn btn-primary">
+            Place Order
+        </button>
+
+        <input type="hidden" name="__RequestVerificationToken" value="<random_looking_token_here>">
+    </form>
+</section>
+
+<br />
+
+<section class="border p-4 bg-light">
+    <h2>€150</h2>
+    <p>Premium Package</p>
+
+    <form method="post">
+        <input type="hidden" name="_handler" value="checkout">
+
+        <button type="submit" class="btn btn-primary">
+            Place Order
+        </button>
+
+        <input type="hidden" name="__RequestVerificationToken" value="<random_looking_token_here>">
+    </form>
+</section>
