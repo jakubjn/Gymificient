@@ -1,67 +1,92 @@
 ﻿@page "/dashboard/{machineName}"
+
 @inject NavigationManager navManager
+@inject MachineService machineService;
 
-<div class="card-header" style="height: fit-content; height: fit-content">
-    <h1 class="text-center" style="justify-self: center;"><strong>@machineName</strong></h1>
+<div class="card-header" style="height: fit-content;">
+    <h1 class="text-center" style="justify-self: center;"><strong>@machine.machineName</strong></h1>
 </div>
 
-<div class="d-lg-inline-flex stat-image-display p-lg-5" style="height: fit-content">
-    <div>
-        <div class="d-inline-block">
-            <span>Machine Usage:</span>
-            <span>XX%</span>
-        </div>
-
-        <div class="d-inline-block">
+<div class="d-lg-inline-flex stat-image-display p-lg-5">
+    <MudPaper class="p-5 pa-4" Height="100%" Width="50%">
+        <div class="stat-child">
              <span>Last Serviced:</span>
-             <input type="date" />
+             <span>Next Service:</span>
+             <span>Warranty:</span>
         </div>
+    </MudPaper>
 
-        <div class="d-inline-block">
-            <span>Warranty:</span>
-            <input type="date" />
-        </div>   
-    </div>
-
-    <div>
-        <img style="width:100%; height: 100%" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.esellerpro.com%2F2347%2FI%2F948%2F88%2FMan-Performing-Bench-Press-on-Mirafit-M1-Adjustable-Folding-Weight-Bench-with-Dip-Station.jpg&f=1&nofb=1&ipt=ef8111c2ea77d3337890bdb7674ae6d24550249b2a8f476f08c602b8de3b1e12&ipo=images" />
+    <div class="stat-child">
+         <img class="rounded-3" style="width:100%; height: 100%" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.esellerpro.com%2F2347%2FI%2F948%2F88%2FMan-Performing-Bench-Press-on-Mirafit-M1-Adjustable-Folding-Weight-Bench-with-Dip-Station.jpg&f=1&nofb=1&ipt=ef8111c2ea77d3337890bdb7674ae6d24550249b2a8f476f08c602b8de3b1e12&ipo=images" />
     </div>
 </div>
 
-<br />
-<br />
+<MudPaper Class="m-5 pa-4 d-flex justify-center align-center" style="width: 90%; height: 40vw">
+    <div style="width: 80%; height:80%">
+        <MudChart ChartType="ChartType.Bar" XAxisLabels="@XLabels" ChartSeries="@series" Width="100%" Height="100%"></MudChart>
+    </div>
+</MudPaper>
 
-<div class="table_class">
-    <table class="table align-content-between" style="width:100%"> 
-        <thead style="width:100%">
-            <tr style="width:100%">
-                <th scope="col">Date</th>
-                <th scope="col">Problem</th>
+<MudTable Class="m-5 pa-4" Items="@problems" Hover="true" Breakpoint="MudBlazor.Breakpoint.Sm">
+    <HeaderContent>
+        <MudTh>Date</MudTh>
+        <MudTh>Problem</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Date">@context.Date</MudTd>
+        <MudTd DataLabel="Sign">@context.Problem</MudTd>
+    </RowTemplate>
+</MudTable>
 
-                <button class="btn align-items-end" type="button" @onclick="OnClick">New problem</button>
-            </tr>
-        </thead>
-
-        <tbody>
-            <tr>
-                @if(problems is not null)
-                {
-                    @foreach (MachineProblem problem in problems)
-                    {
-                        <th scope="row">@problem.Date</th>
-                        <td>@problem.Problem</td>
-                    }
-                }
-            </tr>
-        </tbody>
-    </table>
-</div>
 
 @code {
     [Parameter]
     public string? machineName { get; set; }
 
-    public List<MachineProblem> problems;
+    public List<MachineProblem> problems = new List<MachineProblem>()
+    {
+        new MachineProblem()
+        {
+            Date = DateTime.Today,
+            Problem = "Fatass sat on machine and broke it"
+        },
+
+        new MachineProblem()
+        {
+            Date = DateTime.Today,
+            Problem = "New Member tried to use rowing machine to hit legs"
+        }
+    };
+
+    private Machine? machine;
+
+    public List<ChartSeries> series;
+
+    public string[] XLabels = { "10am", "12pm", "2pm", "4pm", "6pm", "8pm", "10pm" ,"12pm"};
+
+    protected override void OnParametersSet()
+    {
+        if (machineName == null) return;
+
+        machine = machineService.GetMachineFromName(machineName);
+
+        series = new List<ChartSeries>()
+        {
+            new ChartSeries()
+            {
+                Name = "Use",
+                Data = machine.utilization
+            },
+
+            new ChartSeries()
+            {
+                Name = "GOL",
+                Data = new double[] {40 ,60 ,80, 100, 100, 50, 30, 20}
+            }
+        };
+
+        base.OnParametersSet();
+    }
 
     private void OnClick()
     {

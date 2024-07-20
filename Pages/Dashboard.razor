@@ -1,54 +1,12 @@
 ﻿@page "/dashboard"
 
-<div class="card-header header" style="height: fit-content; height: fit-content">
+<div class="card-header" style="height: fit-content; height: fit-content">
     <h1 class="text-center align-text-top" style="justify-self: center"><strong>Dashboard</strong></h1>
 </div>
 
+<Calendar />
+
 <br />
 <br />
 
-<GymGrid machines=@machines />
-
-@code {
-    MachineData sampleMachine1 = new MachineData()
-        {
-            machineName = "Bench Press",
-            utilization = 90,
-                displayImageURL = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia0.giphy.com%2Fmedia%2FQvXVzMT3oziRDud6df%2Fsource.gif&f=1&nofb=1&ipt=ba120b69754bc28b6ec2d76deca47d965af237ac149a6792366ad085969df520&ipo=images"
-        };
-
-    MachineData sampleMachine2 = new MachineData()
-        {
-            machineName = "Shoulder Press",
-            utilization = 60,
-            displayImageURL = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.redd.it%2Fq6bfqssa6bbc1.gif&f=1&nofb=1&ipt=3e5737d62cbc1c466780d8839947f1b4e06b0c10bfedf63a42e82ee3cf57a7d1&ipo=images"
-        };
-
-    MachineData sampleMachine3 = new MachineData()
-        {
-            machineName = "Leg Press",
-            utilization = 70,
-            displayImageURL = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fbodybuilding-wizard.com%2Fwp-content%2Fuploads%2F2018%2F10%2Fsmith-machine-leg-press-vertical.gif&f=1&nofb=1&ipt=b89fbd794d1be81c4d00ad3b01a9d9f56f024a9016cd7c8ae910773ff5d9e555&ipo=images"
-        };
-
-    MachineData sampleMachine4 = new MachineData()
-        {
-            machineName = "Hamstring Curler",
-            utilization = 30,
-            displayImageURL = ""
-        };
-
-    MachineData sampleMachine5 = new MachineData()
-        {
-            machineName = "Bicep Curler",
-            utilization = 30,
-            displayImageURL = ""
-        };
-
-    public List<MachineData> machines;
-
-    protected override async Task OnInitializedAsync()
-    {
-        machines = new List<MachineData> { sampleMachine1, sampleMachine2, sampleMachine3 , sampleMachine4, sampleMachine5};
-    }
-}
+<GymGrid />

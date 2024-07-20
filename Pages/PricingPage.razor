@@ -1,7 +1,7 @@
 ﻿@page "/pricing"
 
-<section class="border p-4 bg-light">
-    <h2>€89</h2>
+<section class="border p-4" style="margin-top: 4vh; background-color: #F2F3F4">
+    <h2>€99</h2>
     <p>Basic Package</p>
 
     <form method="post">
@@ -17,9 +17,26 @@
 
 <br />
 
-<section class="border p-4 bg-light">
-    <h2>€150</h2>
+<section class="border p-4" style="background-color: #F2F3F4">
+    <h2>€149</h2>
     <p>Premium Package</p>
+
+    <form method="post">
+        <input type="hidden" name="_handler" value="checkout">
+
+        <button type="submit" class="btn btn-primary">
+            Place Order
+        </button>
+
+        <input type="hidden" name="__RequestVerificationToken" value="<random_looking_token_here>">
+    </form>
+</section>
+
+<br />
+
+<section class="border p-4" style="background-color: #F2F3F4">
+    <h2>€299</h2>
+    <p>Deluxe Package</p>
 
     <form method="post">
         <input type="hidden" name="_handler" value="checkout">

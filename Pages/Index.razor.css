@@ -17,3 +17,11 @@
     width: 100%;
     height: 100%;
 }
+
+.big-text {
+    font-size: 2vw;
+}
+
+.small-text {
+    font-size: 1.3vw
+}

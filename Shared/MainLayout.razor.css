@@ -1,8 +1,8 @@
 .page {
     position: relative;
     display: flex;
-
     flex-direction: column;
+    background-color: #F2EED5;
 }
 
 main {
@@ -10,7 +10,7 @@ main {
 }
 
 .sidebar {
-    background-color: #003f88;
+    background-color: #FC9F5B
 }
 
 .top-row {

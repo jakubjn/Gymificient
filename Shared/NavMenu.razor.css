@@ -4,24 +4,22 @@
 
 .top-row {
     height: 3.5rem;
-    background-color: #d6d6d6;
-}
-
-.navbar-brand {
-    display: contents;
-    font-size: 1.1rem;
-    color: black;
+    background-color: #FC9F5B;
+    margin: auto;
 }
 
 .top-row-content {
-    width: fit-content;
+    width: 80%;
 }
 
 .main-logo {
+    display: block;
+
     width: 150px;
     height: 40px;
 
-    margin-right: 10px;
+    margin: auto auto auto auto;
+    margin-right: 2.2vw;
 }
 
 .oi {
@@ -45,7 +43,7 @@
     }
 
     .nav-item ::deep a {
-        color: #d7d7d7;
+        color: #FFFFFF;
         border-radius: 4px;
         height: 3rem;
         display: flex;

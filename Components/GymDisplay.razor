@@ -2,21 +2,25 @@
 
     @if(machineData is not null)
     {
-        <button @onclick="@(() => ClickHandler(machineData))">
-            <img src=@machineData.displayImageURL style="width: 70%"/>
-            <h3 style="padding-block"> @machineData.machineName </h3>
-        </button>
+        <div class="card d-flex justify-content-between align-items-center" style="width: 40vmin; height: 40vmin; flex-direction: column">
+                <div class="d-flex justify-content-center card-img-top" style="width: 100%; height: 80%">
+                    <img src=@machineData.displayImageURL style="width: contain; height: 100%" />
+                </div>
+
+                <div @onclick="@(() => ClickHandler(machineData))" class="card-body text-center" style="background-color: lightgray; width: 100%; height:contain">
+                    <h3 class="card-title"> @machineData.machineName </h3>
+                </div>             
+        </div>
+
     }
 
 @code {
     [Parameter]
-    public MachineData? machineData { get; set; }
+    public Machine? machineData { get; set; }
     [Parameter]
-    public string? objClass { get; set; }
-    [Parameter]
-    public EventCallback<MachineData> OnClick { get; set; }
+    public EventCallback<Machine> OnClick { get; set; }
 
-    private async Task ClickHandler(MachineData data)
+    private async Task ClickHandler(Machine data)
     {
         await OnClick.InvokeAsync(machineData);
     }

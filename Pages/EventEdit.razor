@@ -1,0 +1,54 @@
+﻿@page "/dashboard/July/{dayNumber:int}"
+
+@inject MachineService machineService;
+@inject NavigationManager navManager;
+@inject Controllers.EventService eventService;
+
+@if(machines is null)
+{
+    
+} else
+{
+    <MudPaper Class="m-5" style="width: 90%; height: 90%">
+        <EditForm class="m-3 flex-column justify-center align-center" Model="newEvent">
+            <div class="text-center">
+                <span style="font-size: 5vw">New event</span>
+            </div>
+
+            <br />
+            <br />
+
+            <div style="width: 100%">
+                <InputDate @bind-Value="newEvent!.date">@DateTime.Today</InputDate>
+            </div>
+        </EditForm>
+    </MudPaper>
+}
+
+@code {
+    [Parameter]
+    public int dayNumber { get; set; }
+
+    private Data.EventData newEvent = new Data.EventData();
+    private string? machineName;
+
+    private List<Machine>? machines;
+
+    protected override async Task OnInitializedAsync()
+    {
+        machines = await machineService.GetMachinesAsync();
+    }
+
+    private void Submit()
+    {
+        if (machineName is null) return;
+
+        newEvent.machine = machineService.GetMachineFromName(machineName);
+        eventService.NewEvent(newEvent);
+
+        navManager.NavigateTo("/dashboard");
+    }
+
+    //Presto, Estry(Amazon), Athena, Superset
+    //Openpose, Bria, 
+}

@@ -1,10 +1,9 @@
 ﻿.grid-container {
-    display: grid;
-    grid-gap: 50px;
-    grid-auto-columns: max-content;
-    grid-auto-rows: max-content;
-} 
+    display: inline-grid;
+    gap: 50px;
 
-.grid-container > div {
-    padding: 20px;
-}
+    padding-left: 5vw;
+
+    grid-template-columns: 20vw 20vw 20vw;
+    grid-template-rows: repeat(20, 20vw)
+} 

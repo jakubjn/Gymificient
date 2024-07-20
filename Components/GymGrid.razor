@@ -1,22 +1,39 @@
 ﻿@namespace GymSystem.Components
+
+@inject MachineService machineService;
 @inject NavigationManager navManager;
 
-<div class="container" style="width:60%">
-    <div class="d-grid pt-2" style="row-gap: 50px; ">
-        @foreach (MachineData machine in machines)
-        {
-            <div class="row col">
-                <GymDisplay machineData="@machine" OnClick="@((MachineData data) => OnClick(data))" />
-            </div>
-        }
-    </div>
+<div class="" style="height: fit-content; height: fit-content; padding-bottom: 8vh">
+    <h1 class="text-center align-text-top" style="justify-self: center"><strong>Machines</strong></h1>
 </div>
 
-@code {
-    [Parameter]
-    public List<MachineData> machines { get; set; }
+@if (machines is null)
+{
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+} else
+{
+    <div style="width:80%">
+        <div class="grid-container">
+            @foreach (Machine machine in machines)
+            {
+                <div>
+                    <GymDisplay machineData="@machine" OnClick="@((Machine data) => OnClick(data))" />
+                </div>
+            }
+        </div>
+    </div>
+}
 
-    public void OnClick(MachineData data)
+@code {
+    public List<Machine>? machines;
+
+    protected override async Task OnInitializedAsync() {
+        machines = await machineService.GetMachinesAsync();
+    }
+
+    public void OnClick(Machine data)
     {
         navManager.NavigateTo("dashboard/" + data.machineName);
     }

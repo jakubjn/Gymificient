@@ -1,5 +1,8 @@
 ﻿@page "/dashboard/{machineName}/problems"
 
+@inject MachineService machineService;
+@inject Controllers.EventService eventService;
+
 <EditForm Model="newProblem" OnSubmit="OnSubmit">
     <div>
         <label>
@@ -28,7 +31,18 @@
     [Parameter]
     public string? machineName { get; set; }
 
+    private Machine? machine;
+
     MachineProblem newProblem = new MachineProblem();
+
+    protected override void OnParametersSet()
+    {
+        if (machineName is null) return;
+
+        machine = machineService.GetMachineFromName(machineName);
+
+        base.OnParametersSet();
+    }
 
     private void OnSubmit()
     {
