@@ -4,22 +4,55 @@
 @inject NavigationManager navManager;
 @inject Controllers.EventService eventService;
 
+@using DataAccess.Data;
+
 @if(machines is null)
 {
-    
+    <div class="d-flex justify-center align-center">
+        <div class="spinner-border align-self-center justify-self-center" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 } else
 {
     <MudPaper Class="m-5" style="width: 90%; height: 90%">
-        <EditForm class="m-3 flex-column justify-center align-center" Model="newEvent">
-            <div class="text-center">
+        <EditForm style="width: 100%; height: 100%" class="m-3 flex-column justify-center align-center" Model="newEvent">
+            <div style="height: 10%" class="text-center">
                 <span style="font-size: 5vw">New event</span>
             </div>
 
             <br />
             <br />
 
-            <div style="width: 100%">
-                <InputDate @bind-Value="newEvent!.date">@DateTime.Today</InputDate>
+            <div class="d-flex flex-column justify-content-around" style="width: 100%; height: 70%; margin-left: 3vmin">
+                <div>
+                    <span>Date: </span>
+                    <InputDate class="d-inline" style="width: 20vmin; height: 5vmin" @bind-Value="newEvent!.date">@DateTime.Today</InputDate>
+                </div>
+
+                <div>
+                    <span>Machine: </span>
+                    <InputSelect class="d-inline" style="width: 20vmin; height: 5vmin" @bind-Value="machineName">
+                        @foreach(Machine machine in machines)
+                        {
+                            <option value="@machine.machineName">@machine.machineName</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <div>
+                    <span>Event Type: </span>
+                    <InputSelect class="d-inline" style="width: 20vmin; height: 5vmin" @bind-Value="newEvent!.eventName">
+                        <option>Service</option>
+                        <option>Repair</option>
+                        <option>Inspection</option>
+                    </InputSelect>
+                </div>
+
+                <div>
+                    <span>Notes: </span>
+                    <InputTextArea class="d-inline" style="width: 20vmin; height: 5vmin" @bind-Value="newEvent!.eventName" />
+                </div>
             </div>
         </EditForm>
     </MudPaper>
@@ -29,7 +62,8 @@
     [Parameter]
     public int dayNumber { get; set; }
 
-    private Data.EventData newEvent = new Data.EventData();
+    private DataAccess.Data.EventData newEvent = new DataAccess.Data.EventData();
+
     private string? machineName;
 
     private List<Machine>? machines;
@@ -43,7 +77,7 @@
     {
         if (machineName is null) return;
 
-        newEvent.machine = machineService.GetMachineFromName(machineName);
+        //newEvent.machine = machineService.GetMachineFromName(machineName);
         eventService.NewEvent(newEvent);
 
         navManager.NavigateTo("/dashboard");

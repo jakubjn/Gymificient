@@ -35,13 +35,13 @@
 
     MachineProblem newProblem = new MachineProblem();
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
         if (machineName is null) return;
 
-        machine = machineService.GetMachineFromName(machineName);
+        machine = await machineService.GetMachineFromName(machineName);
 
-        base.OnParametersSet();
+        base.OnParametersSetAsync();
     }
 
     private void OnSubmit()

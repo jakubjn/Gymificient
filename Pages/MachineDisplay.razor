@@ -31,6 +31,7 @@
     <HeaderContent>
         <MudTh>Date</MudTh>
         <MudTh>Problem</MudTh>
+        <MudButton>New Problem</MudButton>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Date">@context.Date</MudTd>
@@ -64,24 +65,24 @@
 
     public string[] XLabels = { "10am", "12pm", "2pm", "4pm", "6pm", "8pm", "10pm" ,"12pm"};
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
         if (machineName == null) return;
 
-        machine = machineService.GetMachineFromName(machineName);
+        machine = await machineService.GetMachineFromName(machineName);
 
         series = new List<ChartSeries>()
         {
             new ChartSeries()
             {
-                Name = "Use",
+                Name = "Use %",
                 Data = machine.utilization
             },
 
             new ChartSeries()
             {
-                Name = "GOL",
-                Data = new double[] {40 ,60 ,80, 100, 100, 50, 30, 20}
+                Name = "Average Total Use %",
+                Data = await machineService.GetAverageUsage()
             }
         };
 

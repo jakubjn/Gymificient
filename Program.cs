@@ -1,7 +1,10 @@
+using DataAccess;
 using GymSystem.Controllers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor.Services;
+using Stripe;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +13,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 builder.Services.AddSingleton<MachineService>();
-builder.Services.AddSingleton<EventService>();
+builder.Services.AddSingleton<GymSystem.Controllers.EventService>();
 
 builder.Services.AddMudServices();
 
