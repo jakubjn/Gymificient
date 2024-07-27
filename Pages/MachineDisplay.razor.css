@@ -42,3 +42,7 @@ span {
     padding-left: 50px;
     padding-right: 50px;
 }
+
+.bg-main {
+    background-color: #ccdbdc;
+}

@@ -3,41 +3,70 @@
 @inject NavigationManager navManager
 @inject MachineService machineService;
 
-<div class="card-header" style="height: fit-content;">
-    <h1 class="text-center" style="justify-self: center;"><strong>@machine.machineName</strong></h1>
-</div>
+@if(machine is null)
+{
+    <div class="d-flex justify-center align-center">
+        <div class="spinner-border align-self-center justify-self-center" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+} else
+{
+    <div class="card-header" style="height: fit-content;">
+        <h1 class="text-center" style="justify-self: center;"><strong>@machine.machineName</strong></h1>
+    </div>
 
-<div class="d-lg-inline-flex stat-image-display p-lg-5">
-    <MudPaper class="p-5 pa-4" Height="100%" Width="50%">
-        <div class="stat-child">
-             <span>Last Serviced:</span>
-             <span>Next Service:</span>
-             <span>Warranty:</span>
+    <div class="d-lg-inline-flex stat-image-display p-lg-5">
+        <MudPaper class="d-flex justify-content-between p-5 pa-4 bg-main" Height="100%" Width="50%">
+            <div class="stat-child">
+                <div>
+                    <span>Last Serviced:</span>
+                    <InputDate @bind-Value="@machine.lastService"></InputDate>
+                </div>
+
+                <div>
+                    <span>Next Service:</span>
+                    <InputDate @bind-Value="@machine.nextService"></InputDate>
+                </div>
+
+                <div>
+                    <span>Warranty:</span>
+                    <InputDate @bind-Value="@machine.warranty"></InputDate>
+                </div>
+            </div>
+
+            <MudButton Class="align-self-end m-3" Style="background-color: deepskyblue">Save</MudButton>
+        </MudPaper>
+
+        <MudPaper Class="pa-4">
+            <div class="stat-child">
+                <MudChart ChartType="MudBlazor.ChartType.Donut"
+                     InputData="@donut"
+                     InputLabels="@(new string[] {"Average Use", "Average Unused"})">
+                </MudChart>
+            </div>
+        </MudPaper>
+    </div>
+
+    <MudPaper class="m-5 pa-4 d-flex justify-center align-center bg-main" style="width: 90%; height: 40vw">
+        <div style="width: 80%; height:80%">
+            <MudChart ChartOptions="@(new MudBlazor.ChartOptions {YAxisTicks=10})" ChartType="MudBlazor.ChartType.Bar" XAxisLabels="@XLabels" ChartSeries="@series" Width="100%" Height="100%"></MudChart>
         </div>
     </MudPaper>
 
-    <div class="stat-child">
-         <img class="rounded-3" style="width:100%; height: 100%" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.esellerpro.com%2F2347%2FI%2F948%2F88%2FMan-Performing-Bench-Press-on-Mirafit-M1-Adjustable-Folding-Weight-Bench-with-Dip-Station.jpg&f=1&nofb=1&ipt=ef8111c2ea77d3337890bdb7674ae6d24550249b2a8f476f08c602b8de3b1e12&ipo=images" />
-    </div>
-</div>
-
-<MudPaper Class="m-5 pa-4 d-flex justify-center align-center" style="width: 90%; height: 40vw">
-    <div style="width: 80%; height:80%">
-        <MudChart ChartType="ChartType.Bar" XAxisLabels="@XLabels" ChartSeries="@series" Width="100%" Height="100%"></MudChart>
-    </div>
-</MudPaper>
-
-<MudTable Class="m-5 pa-4" Items="@problems" Hover="true" Breakpoint="MudBlazor.Breakpoint.Sm">
-    <HeaderContent>
-        <MudTh>Date</MudTh>
-        <MudTh>Problem</MudTh>
-        <MudButton>New Problem</MudButton>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Date">@context.Date</MudTd>
-        <MudTd DataLabel="Sign">@context.Problem</MudTd>
-    </RowTemplate>
-</MudTable>
+    <MudTable Class="m-5 pa-4 bg-main" Items="@problems" Hover="true" Breakpoint="MudBlazor.Breakpoint.Sm">
+        <HeaderContent>
+            <MudTh>Date</MudTh>
+            <MudTh>Problem</MudTh>
+            <MudTh><MudButton Style="background-color: deepskyblue">New Problem</MudButton></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Date">@context.Date</MudTd>
+            <MudTd DataLabel="Sign">@context.Problem</MudTd>
+            <MudTd></MudTd>
+        </RowTemplate>
+    </MudTable>
+}
 
 
 @code {
@@ -49,7 +78,7 @@
         new MachineProblem()
         {
             Date = DateTime.Today,
-            Problem = "Fatass sat on machine and broke it"
+            Problem = "Someone sat on the machine and broke it"
         },
 
         new MachineProblem()
@@ -63,13 +92,17 @@
 
     public List<ChartSeries> series;
 
-    public string[] XLabels = { "10am", "12pm", "2pm", "4pm", "6pm", "8pm", "10pm" ,"12pm"};
+    public string[] XLabels;
+
+    private double[] donut = new double[2];
 
     protected override async Task OnParametersSetAsync()
     {
         if (machineName == null) return;
 
         machine = await machineService.GetMachineFromName(machineName);
+
+        if (machine is null) return;
 
         series = new List<ChartSeries>()
         {
@@ -79,12 +112,21 @@
                 Data = machine.utilization
             },
 
-            new ChartSeries()
-            {
-                Name = "Average Total Use %",
-                Data = await machineService.GetAverageUsage()
-            }
+            //new ChartSeries()
+            //{
+               // Name = "Average Total Use %",
+               // Data = await machineService.GetAllAverageUsage()
+            //}
         };
+
+        XLabels = new string[machine.utilization.Length];
+
+        for(int i = 0; i < machine.utilization.Length; i++)
+        {
+            XLabels[i] = ((i + 1) * 15).ToString() + "s";
+        }
+
+        donut = new double[2] { machineService.GetMachineAverageUse(machine), 100 - machineService.GetMachineAverageUse(machine) };
 
         base.OnParametersSet();
     }

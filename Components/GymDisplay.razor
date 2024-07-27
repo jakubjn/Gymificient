@@ -7,11 +7,10 @@
                     <img src=@machineData.displayImageURL style="width: contain; height: 100%" />
                 </div>
 
-                <div @onclick="@(() => ClickHandler(machineData))" class="card-body text-center" style="background-color: lightgray; width: 100%; height:contain">
-                    <h3 class="card-title"> @machineData.machineName </h3>
+                <div @onclick="@(() => ClickHandler(machineData))" class="card-body text-center" style="background-color: lightgray; width: 100%; height: 20%; white-space: nowrap">
+                    <h3 class="d-inline card-title m-0">@machineData.machineName</h3>
                 </div>             
         </div>
-
     }
 
 @code {

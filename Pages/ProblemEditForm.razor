@@ -41,7 +41,7 @@
 
         machine = await machineService.GetMachineFromName(machineName);
 
-        base.OnParametersSetAsync();
+        await base.OnParametersSetAsync();
     }
 
     private void OnSubmit()

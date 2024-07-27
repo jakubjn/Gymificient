@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor.Services;
 using Stripe;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +15,7 @@ builder.Services.AddSingleton<MachineService>();
 builder.Services.AddSingleton<GymSystem.Controllers.EventService>();
 
 builder.Services.AddMudServices();
+builder.Services.AddBlazorBootstrap();
 
 var app = builder.Build();
 
