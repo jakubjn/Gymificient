@@ -2,7 +2,9 @@
 
 @inject MachineService machineService;
 @inject NavigationManager navManager;
-@inject Controllers.EventService eventService;
+@inject EventService eventService;
+
+@inject AuthenticationStateProvider authStateProvider;
 
 @using DataAccess.Data;
 
@@ -70,7 +72,17 @@
 
     protected override async Task OnInitializedAsync()
     {
-        machines = await machineService.GetMachinesAsync();
+        AuthorisationService authService = (AuthorisationService)authStateProvider;
+
+        UserSession userSession = await authService.GetUserSessionAsync();
+
+        if (userSession == null || userSession.UserName == "Guest")
+        {
+            navManager.NavigateTo("login", true);
+            return;
+        }
+
+        machines = await machineService.GetMachinesAsync(userSession.OrgId);
     }
 
     private void Submit()

@@ -1,0 +1,33 @@
+﻿<MudPaper Class="d-flex flex-column justify-content-center align-center" Style="height: 45vh; width: 63%">
+    <MudTable Style="width:100%; height: 100%" Items="@actions" T="@ActionClass">
+        <HeaderContent>
+            <MudTh>Date</MudTh>
+            <MudTh>Machine</MudTh>
+            <MudTh>Action Type</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Date">@context.date</MudTd>
+            <MudTd DataLabel="Machine">@context.machine.machineName</MudTd>
+            <MudTd DataLabel="Action Type">@context.actionType</MudTd>
+        </RowTemplate>
+    </MudTable>
+</MudPaper>
+
+@code {
+    ActionClass[] actions = new ActionClass[]
+    {
+        new ActionClass
+        {
+            machine = new Machine() {machineName = "Bench Press"},
+            actionType = ActionType.Service,
+            date = DateOnly.FromDateTime(DateTime.Today.Date),
+        },
+
+        new ActionClass
+        {
+            machine = new Machine() {machineName = "Shoulder Press"},
+            actionType = ActionType.Inspection,
+            date = DateOnly.FromDateTime(DateTime.Today.Date),
+        }
+    };
+}

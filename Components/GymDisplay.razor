@@ -2,7 +2,19 @@
 
     @if(machineData is not null)
     {
-        <div class="card d-flex justify-content-between align-items-center" style="width: 40vmin; height: 40vmin; flex-direction: column">
+        <MudCard Style="width: 40vmin; height: 45vmin">
+            <MudCardMedia Image="" Style="height: 70%" />
+
+            <MudCardContent>
+                <MudText Typo="Typo.h5">@machineData.machineName</MudText>
+            </MudCardContent>
+
+            <MudCardActions>
+                <MudButton @onclick="() => ClickHandler(machineData)" Variant="Variant.Text" Color="Color.Primary">Details</MudButton>
+            </MudCardActions>
+        </MudCard>
+
+        @* <div class="card d-flex justify-content-between align-items-center" style="width: 40vmin; height: 40vmin; flex-direction: column">
                 <div class="d-flex justify-content-center card-img-top" style="width: 100%; height: 80%">
                     <img src=@machineData.displayImageURL style="width: contain; height: 100%" />
                 </div>
@@ -10,7 +22,7 @@
                 <div @onclick="@(() => ClickHandler(machineData))" class="card-body text-center" style="background-color: lightgray; width: 100%; height: 20%; white-space: nowrap">
                     <h3 class="d-inline card-title m-0">@machineData.machineName</h3>
                 </div>             
-        </div>
+        </div> *@
     }
 
 @code {

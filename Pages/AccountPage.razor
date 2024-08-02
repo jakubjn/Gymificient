@@ -1,0 +1,80 @@
+﻿@page "/login"
+
+@inject AuthenticationStateProvider authState;
+@inject UserService userService;
+
+<AuthorizeView Roles="admin">
+    <Authorized>
+        <div style="width:100%;">
+            <MudPaper Class="d-flex flex-column align-center justify-content-between m-5" style="height: 85vh; width: 100%">
+                <div style="height: 20%">
+                    <h1>Welcome</h1>
+                </div>
+
+                <div class="d-inline-flex flex-row" style="height: 80%">
+                    <div style="width: 50%" class="d-flex align-center justify-center">
+                        <h1>Left Box</h1>
+                    </div>
+
+                    <div style="width: 50%" class="d-flex align-center justify-center">
+                        <h1>Right Box</h1>
+                    </div>
+                </div>
+            </MudPaper>
+        </div>
+    </Authorized>
+
+    <NotAuthorized>
+        <div style="width:100%;">
+            <MudPaper Class="d-flex flex-row m-5" style="height: 85vh">
+                <div class="m-3 bg-light d-inline-flex flex-column justify-content-center align-center" style="width:50%; height: 80vh">
+                    <h1>Welcome!</h1>
+
+                    <p class="m-3">
+                        Our program is currently invite only. If you wish to access it you must
+                        make a request to the owners at gymifficient@gmail.com. Once you have your account,
+                        login using the menu on the right and you will have access to the program.
+                    </p>
+                </div>
+
+                <div class="m-3 bg-light flex-column d-inline-flex justify-content-evenly align-center" style="width:50%; height: 80vh">
+                    <h1>Login</h1>
+
+                    <div>
+                        <MudTextField Error="@error" @bind-Value="userName" Label="Enter Username" />
+
+                        <MudTextField Error="@error" Style="margin-bottom: 20%" @bind-Value="password" InputType="@InputType.Password" Label="Enter Password" />
+                    </div>
+  
+                    <MudButton @onclick="VerifyAccount">Login</MudButton>
+                </div>
+            </MudPaper>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private bool error;
+
+    private string userName;
+
+    private string password;
+
+    private string displayName;
+
+    private async Task VerifyAccount()
+    {
+        if(await userService.AuthenticateAccount(userName, password))
+        {
+            AuthorisationService authService = (AuthorisationService)authState;
+
+            UserSession session = await userService.GetNewSession(userName, password);
+
+            await authService.UpdateAuthenticationState(session);
+        } else
+        {
+            error = true;
+        }
+    }
+}
+ 

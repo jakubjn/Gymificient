@@ -2,10 +2,7 @@
 
 @inject MachineService machineService;
 @inject NavigationManager navManager;
-
-<div class="" style="height: fit-content; height: fit-content; padding-bottom: 8vh">
-    <h1 class="text-center align-text-top" style="justify-self: center"><strong>Machines</strong></h1>
-</div>
+@inject AuthenticationStateProvider authStateProvider;
 
 @if (machines is null)
 {
@@ -16,15 +13,13 @@
     </div>
 } else
 {
-    <div style="width:80%">
-        <div class="grid-container">
-            @foreach (Machine machine in machines)
-            {
-                <div>
-                    <GymDisplay machineData="@machine" OnClick="@((Machine data) => OnClick(data))" />
-                </div>
-            }
-        </div>
+    <div style="width: 100%" class="grid-container">
+        @foreach (Machine machine in machines)
+        {
+            <div>
+                <GymDisplay machineData="@machine" OnClick="@((Machine data) => OnClick(data))" />
+            </div>
+        }
     </div>
 }
 
@@ -32,7 +27,17 @@
     public List<Machine>? machines;
 
     protected override async Task OnInitializedAsync() {
-        machines = await machineService.GetMachinesAsync();
+        AuthorisationService authService = (AuthorisationService)authStateProvider;
+
+        UserSession userSession = await authService.GetUserSessionAsync();
+
+        if (userSession == null || userSession.UserName == "Guest")
+        {
+            navManager.NavigateTo("login", true);
+            return;
+        }
+
+        machines = await machineService.GetMachinesAsync(userSession.OrgId);
     }
 
     public void OnClick(Machine data)

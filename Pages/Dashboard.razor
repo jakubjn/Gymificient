@@ -1,12 +1,61 @@
 ﻿@page "/dashboard"
 
-<div class="card-header" style="height: fit-content; height: fit-content">
-    <h1 class="text-center align-text-top" style="justify-self: center"><strong>Dashboard</strong></h1>
-</div>
+@inject AuthenticationStateProvider authenticationStateProvider
+@inject NavigationManager navManager;
 
-<Calendar />
+<AuthorizeView Roles="admin">
 
-<br />
-<br />
+    <div class="card-header" style="height: fit-content; height: fit-content; background-color: #FFFFFF">
+        <h1 class="text-center align-text-top" style="justify-self: center"><strong>Dashboard</strong></h1>
+    </div>
 
-<GymGrid />
+    <MudCarousel Style="width: 100%; height: 200vh" ShowArrows="true" ShowBullets="false" EnableSwipeGesture="true" AutoCycle="false" TData="object">
+        <MudCarouselItem Transition="@Transition.Slide" class="" style="width: 100%">
+            <div class="m-3 d-flex flex-column align-center">
+                <div class="d-flex flex-row justify-content-between align-center" style="width: 100%">
+                    <RecommendedActions />
+                    <TotalUsagePie />
+                </div>
+
+                <br />
+                <br />
+
+                <MachineUsageBar />
+
+                <br />
+                <br />
+
+                <div class="d-flex flex-row justify-content-between align-content-center" style="width: 100%">
+                    <WorstMachines />
+                </div>
+            </div>
+        </MudCarouselItem>
+
+        <MudCarouselItem Transition="@Transition.Slide" style="width: 100">
+            <div class="m-3 d-flex flex-column align-center">
+                <GymGrid />
+            </div>
+        </MudCarouselItem>
+
+        <MudCarouselItem Transition="@Transition.Slide" style="width: 100%">
+            <div class="m-3 d-flex flex-column align-center">
+                <Calendar />
+            </div>
+        </MudCarouselItem>
+    </MudCarousel>
+
+</AuthorizeView>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        AuthorisationService authService = (AuthorisationService)authenticationStateProvider;
+
+        AuthenticationState authenticationState = await authService.GetAuthenticationStateAsync();
+
+        if (authenticationState.User.Identity is null || !authenticationState.User.Identity.IsAuthenticated)
+        {
+            navManager.NavigateTo("/login");
+        }
+    }
+}

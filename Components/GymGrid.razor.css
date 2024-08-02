@@ -1,9 +1,7 @@
 ﻿.grid-container {
     display: inline-grid;
-    gap: 50px;
+    gap: 8%;
 
-    padding-left: 5vw;
-
-    grid-template-columns: 20vw 20vw 20vw;
-    grid-template-rows: repeat(20, 20vw)
+    grid-template-columns: 30% 30% 30%;
+    grid-template-rows: repeat(20, 20vh)
 } 

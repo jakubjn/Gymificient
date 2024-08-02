@@ -1,123 +1,81 @@
 ﻿@inject MachineService machineService;
+@inject UtilisationService utilisationService;
 @inject IJSRuntime jsRuntime;
+
+@inject AuthenticationStateProvider authStateProvider;
+@inject NavigationManager navManager;
+
+@namespace GymSystem.Components
 
 @using Microsoft.JSInterop;
 
-<BarChart @ref="barChart"></BarChart>
-
-<div class="m-5 pa-4 d-flex justify-center align-center" style="width: 90%; height: 40vw"> 
-    @if(machines is null)
+<MudPaper class="d-flex flex-column justify-center pa-4" style="width: 100%; height: 90vh">
+    @if(machines is null || MinMaxTimes is null)
     {
         <div class="spinner-border align-self-center justify-self-center" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
     } else
     {
-        <canvas style="width: 100%; height: 100%" id="myChart"></canvas>
-
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-        <script>
-            const ctx = document.getElementById('myChart');
-
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: [ 'Hello', 'Hi' ],
-                    datasets: [{
-                        label: '# of Votes',
-                        data: [12, 19, 3, 5, 2, 3],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        </script>
+        <div style="width:20%">
+            <MudSelect @bind-Value="timeView" T="DateTime" Label="Select Timeframe">
+                <MudSelectItem Value="@(DateTime.Now.AddMinutes(-30))">Last Half-Hour</MudSelectItem>
+                <MudSelectItem Value="@(DateTime.Now.AddMinutes(-60))">Last Hour</MudSelectItem>
+                <MudSelectItem Value="@(DateTime.Now.AddDays(-1))">Last Day</MudSelectItem>
+                <MudSelectItem Value="@(DateTime.Now.AddDays(-7))">Last Week</MudSelectItem>
+            </MudSelect>
+        </div>
+   
+        <GanttChart
+            Name="Sample Gantt Chart"
+            Id=@Id
+            StartTime="@timeView"
+            EndTime="DateTime.Now"
+            MainData="@MinMaxTimes">
+        </GanttChart>
     }
-</div>
+</MudPaper>
 
 @code {
     public List<Machine>? machines;
 
-    private string[] machineNames;
-    private List<double?> machineAverageUse;
+    private string Id = "usageBar";
 
-    private BarChart barChart = default!;
-    private BarChartOptions barChartOptions = default!;
-    private ChartData chartData = default!;
+    private Dictionary<Machine, List<KeyValuePair<DateTime, DateTime>>> MinMaxTimes;
+
+    private DateTime timeView = DateTime.Now.AddMinutes(-200);
+
+    private string selected = "None";
 
     protected override async Task OnInitializedAsync()
     {
-        machines = await machineService.GetMachinesAsync();
+        AuthorisationService authService = (AuthorisationService)authStateProvider;
+
+        UserSession userSession = await authService.GetUserSessionAsync();
+
+        if (userSession == null || userSession.UserName == "Guest")
+        {
+            navManager.NavigateTo("login", true);
+            return;
+        }
+
+        machines = await machineService.GetMachinesAsync(userSession.OrgId);
 
         if (machines is null) return;
 
-        barChartOptions = new BarChartOptions();
-        barChartOptions.Responsive = true;
-        barChartOptions.Interaction = new Interaction { Mode = InteractionMode.Y };
-        barChartOptions.IndexAxis = "y";
+        MinMaxTimes = new Dictionary<Machine, List<KeyValuePair<DateTime, DateTime>>>();
 
-        machineAverageUse = new List<double?>();
-        machineNames = new string[machines.Count];
-
-        for(int i = 0; i < machines.Count; i++)
+        foreach(Machine machine in machines)
         {
-            if (machines[i] is null || machines[i].machineName is null) continue;
-
-            machineAverageUse.Add(machineService.GetMachineAverageUse(machines[i]));
-            machineNames[i] = machines[i].machineName;
-        }
-
-        BarChartDataset dataset = new BarChartDataset()
-            {
-                Data = machineAverageUse,
-                Label = "Average Use %",
-                BackgroundColor = new List<string>()
-                    {
-                    "rgba(255, 99, 132, 0.2)",
-                    "rgba(54, 162, 235, 0.2)",
-                    "rgba(255, 206, 86, 0.2)",
-                    "rgba(75, 192, 192, 0.2)",
-                    "rgba(153, 102, 255, 0.2)",
-                    "rgba(255, 159, 64, 0.2)"
-                },
-                BorderColor = new List<string>()
-                    {
-                    "rgba(255, 99, 132, 1)",
-                    "rgba(54, 162, 235, 1)",
-                    "rgba(255, 206, 86, 1)",
-                    "rgba(75, 192, 192, 1)",
-                    "rgba(153, 102, 255, 1)",
-                    "rgba(255, 159, 64, 1)"
-                },
-            };
-
-        chartData = new ChartData()
-            {
-                Datasets = new List<IChartDataset>() { dataset },
-                Labels = machineNames.ToList()
-            };
+            MinMaxTimes.Add(machine, await utilisationService.GetMachineUsageTimes(machine.Id));
+        }     
     }
 
-    public void UpdateChart()
+    private void ChangeViewTime(DateTime time)
     {
-    }
+        System.Diagnostics.Debug.WriteLine("Running");
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if(firstRender)
-        {
-            barChart = new BarChart();
-
-            barChart.InitializeAsync(chartData, barChartOptions);
-        }
-
-        await base.OnAfterRenderAsync(firstRender);
+        timeView = time;
+        Id = "ChangedBar";
     }
 }

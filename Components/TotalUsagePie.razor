@@ -1,0 +1,54 @@
+﻿@inject MachineService machineService;
+
+@inject AuthenticationStateProvider authStateProvider;
+@inject NavigationManager navManager;
+
+@namespace GymSystem.Components
+
+<MudPaper Class="d-flex flex-column justify-content-center align-center" Style="height: 45vh; width: 33%">
+    @if(data is not null)
+    {
+        <Chart 
+            Class="m-5"
+            Data="@(new[] {"40", "60"})"
+            Id="pie1"
+            Type="ChartType.pie"
+            Labels="@(new[] {"Used", "Ununsed"})">
+        </Chart>
+    } else
+    {
+        <div class="spinner-border align-self-center justify-self-center" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    }
+</MudPaper>
+
+@code {
+    private List<Machine> machines;
+
+    private string[] data;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthorisationService authService = (AuthorisationService)authStateProvider;
+
+        UserSession userSession = await authService.GetUserSessionAsync();
+
+        if (userSession == null || userSession.UserName == "Guest")
+        {
+            navManager.NavigateTo("login", true);
+            return;
+        }
+
+        double[] dataRaw = await machineService.GetAllAverageUsage(userSession.OrgId);
+
+        if (dataRaw is null) return;
+
+        data = new string[dataRaw.Length];
+
+        for(int i = 0; i<dataRaw.Length; i++)
+        {
+            data[i] = dataRaw[i].ToString();
+        }
+    }
+}

@@ -1,18 +1,28 @@
 using DataAccess;
-using GymSystem.Controllers;
+using DataAccess.Controllers;
+using GymSystem.Authorization;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 using MudBlazor.Services;
-using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddAuthenticationCore();
 
 builder.Services.AddSingleton<MachineService>();
-builder.Services.AddSingleton<GymSystem.Controllers.EventService>();
+builder.Services.AddSingleton<EventService>();
+builder.Services.AddSingleton<UtilisationService>();
+builder.Services.AddSingleton<UserService>();
+
+builder.Services.AddScoped<ProtectedSessionStorage>();
+builder.Services.AddScoped<AuthenticationStateProvider, GymSystem.Authorization.AuthorisationService>();
 
 builder.Services.AddMudServices();
 builder.Services.AddBlazorBootstrap();

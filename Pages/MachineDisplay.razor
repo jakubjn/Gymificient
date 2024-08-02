@@ -2,6 +2,8 @@
 
 @inject NavigationManager navManager
 @inject MachineService machineService;
+@inject UtilisationService utilisationService;
+@inject AuthenticationStateProvider authStateProvider;
 
 @if(machine is null)
 {
@@ -35,7 +37,7 @@
                 </div>
             </div>
 
-            <MudButton Class="align-self-end m-3" Style="background-color: deepskyblue">Save</MudButton>
+            <MudButton @onclick="NewContactDetails" Class="align-self-end m-3" Style="background-color: deepskyblue">Save</MudButton>
         </MudPaper>
 
         <MudPaper Class="pa-4">
@@ -100,28 +102,36 @@
     {
         if (machineName == null) return;
 
-        machine = await machineService.GetMachineFromName(machineName);
+        AuthorisationService authService = (AuthorisationService)authStateProvider;
+
+        UserSession userSession = await authService.GetUserSessionAsync();
+
+        if (userSession == null || userSession.UserName == "Guest")
+        {
+            navManager.NavigateTo("login", true);
+            return;
+        }
+
+        machine = await machineService.GetMachineFromName(machineName, userSession.OrgId);
 
         if (machine is null) return;
+
+        double[] usage = await utilisationService.GetAllMachineUsageAsync(machine.Id);
+
+        if (usage is null) return;
 
         series = new List<ChartSeries>()
         {
             new ChartSeries()
             {
                 Name = "Use %",
-                Data = machine.utilization
+                Data = usage
             },
-
-            //new ChartSeries()
-            //{
-               // Name = "Average Total Use %",
-               // Data = await machineService.GetAllAverageUsage()
-            //}
         };
 
-        XLabels = new string[machine.utilization.Length];
+        XLabels = new string[usage.Length];
 
-        for(int i = 0; i < machine.utilization.Length; i++)
+        for(int i = 0; i < XLabels.Length; i++)
         {
             XLabels[i] = ((i + 1) * 15).ToString() + "s";
         }
@@ -134,5 +144,12 @@
     private void OnClick()
     {
         navManager.NavigateTo("/dashboard/" + machineName + "/problems");
+    }
+
+    private void NewContactDetails()
+    {
+        if (machine is null) return;
+
+        machineService.SetNewContacts(machine);
     }
 }

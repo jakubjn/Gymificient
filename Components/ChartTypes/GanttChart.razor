@@ -1,0 +1,138 @@
+﻿@using System.Globalization
+@using System.Text.Json;
+
+@inject IJSRuntime jsRuntime;
+
+<canvas id="@Id"></canvas>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public string Name { get; set; }
+
+    [Parameter]
+    public DateTime StartTime { get; set; }
+
+    [Parameter]
+    public DateTime EndTime { get; set; }
+
+    [Parameter]
+    public Dictionary<Machine, List<KeyValuePair<DateTime,DateTime>>> MainData { get; set; }
+
+    public class Dataset
+    {
+        public DateTime[][] data { get; set; }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (MainData.Keys.Count == 0) return;
+
+        string[] machineNames = new string[MainData.Keys.Count];
+
+        List<KeyValuePair<DateTime, DateTime>> MinMaxCount = MainData[MainData.Keys.First<Machine>()];
+
+        var dataValues = new Dataset[5];
+
+        int i = 0;
+
+        @for(i = 0; i<dataValues.Length;i++)
+        {
+            var dataClass = new Dataset();
+
+            dataClass.data = new DateTime[MainData.Count][];
+
+            dataValues[i] = dataClass;
+        }
+
+        i = 0;
+
+        foreach (Machine machine in MainData.Keys)
+        {
+            machineNames[i] = machine.machineName;
+
+            List<KeyValuePair<DateTime, DateTime>> MinMaxPairList = MainData[machine];
+
+            if (MinMaxPairList == null || MinMaxPairList.Count == 0)
+            {
+                i++;
+                continue;
+            }
+
+            int x = 0;
+
+            foreach (KeyValuePair<DateTime, DateTime> pair in MinMaxPairList)
+            {
+                var dataClass = dataValues[x];
+
+                dataClass.data[i] = new[] { pair.Key, pair.Value };
+
+                dataValues[x] = dataClass;
+
+                x++;
+            }
+
+            i++;
+        }
+
+        var config = new
+        {
+            type = "bar",
+
+            options = new
+            {
+                indexAxis = "y",
+                responsive = true,
+                scales = new {
+                    x = new
+                    {
+                        stacked = false,
+                        type = "time",
+
+                        min = StartTime,
+                        max = EndTime,
+
+                        time = new 
+                        {
+                            tooltipFormat = "DD T"
+                        },
+                    },
+
+                    y = new
+                    {
+                        stacked = true
+                    }
+                },
+                plugins = new
+                {
+                    legend = new
+                    {
+                        display = false
+                    },
+                    title = new
+                    {
+                        display = false,
+                    }
+                }
+            },
+
+            data = new
+            {
+                datasets = dataValues,
+                labels = machineNames
+            }
+        };
+
+        // var options = new JsonSerializerOptions { WriteIndented = true };
+        // var JsonString = JsonSerializer.Serialize(config, options);
+
+        // System.Diagnostics.Debug.WriteLine(JsonString);
+
+        await jsRuntime.InvokeVoidAsync("setup", Id, config);
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}
+

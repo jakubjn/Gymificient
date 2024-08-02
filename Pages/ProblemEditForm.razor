@@ -1,7 +1,10 @@
 ﻿@page "/dashboard/{machineName}/problems"
 
 @inject MachineService machineService;
-@inject Controllers.EventService eventService;
+@inject EventService eventService;
+
+@inject AuthenticationStateProvider authStateProvider;
+@inject NavigationManager navManager;
 
 <EditForm Model="newProblem" OnSubmit="OnSubmit">
     <div>
@@ -39,7 +42,17 @@
     {
         if (machineName is null) return;
 
-        machine = await machineService.GetMachineFromName(machineName);
+        AuthorisationService authService = (AuthorisationService)authStateProvider;
+
+        UserSession userSession = await authService.GetUserSessionAsync();
+
+        if (userSession == null || userSession.UserName == "Guest")
+        {
+            navManager.NavigateTo("login", true);
+            return;
+        }
+
+        machine = await machineService.GetMachineFromName(machineName, userSession.OrgId);
 
         await base.OnParametersSetAsync();
     }

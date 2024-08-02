@@ -1,4 +1,6 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject AuthenticationStateProvider authServiceProvider;
+
+<div class="top-row ps-3 navbar navbar-dark">
      <div class="top-row-content">
          <a href=""><img class="main-logo" src="images/gymlogo2.png" /> </a>
      </div>
@@ -9,18 +11,18 @@
 </div>
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
+    <nav class="flex-column" style="margin-bottom: 50vh">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span aria-hidden="true"></span> Home
             </NavLink>
         </div>
 
-        <div class="nav-item px-3">
+        @* <div class="nav-item px-3">
             <NavLink class="nav-link" href="pricing">
                 <span aria-hidden="true"></span> Pricing
             </NavLink>
-        </div>
+        </div> *@
 
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="dashboard">
@@ -28,9 +30,21 @@
             </NavLink>
         </div>
     </nav>
+
+    <NavLink href="login" style="width:100%">
+        <Button class="d-flex m-2 flex-row justify-content-start" style="width:90%">
+            <MudAvatar Class="m-2 d-inline">
+
+            </MudAvatar>
+
+            <span style="color: #FFFFFF" class="d-inline">@userName</span>
+        </Button>
+    </NavLink>
 </div>
 
 @code {
+    private string userName;
+
     private bool collapseNavMenu = true;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
@@ -38,5 +52,20 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        AuthorisationService authService = (AuthorisationService)authServiceProvider;
+
+        UserSession userSession = await authService.GetUserSessionAsync();
+
+        if(userSession is null)
+        {
+            userName = "Guest";
+            return;
+        }
+
+        userName = userSession.UserName;
     }
 }

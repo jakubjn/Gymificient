@@ -1,5 +1,18 @@
 {
   "version": "1.0",
   "defaultProvider": "cdnjs",
-  "libraries": []
+  "libraries": [
+    {
+      "library": "Chart.js@4.4.1",
+      "destination": "wwwroot/js/Chart.js/"
+    },
+    {
+      "library": "moment.js@2.30.1",
+      "destination": "wwwroot/js/moment.js/"
+    },
+    {
+      "library": "chartjs-adapter-moment@1.0.1",
+      "destination": "wwwroot/js/chartjs-adapter-moment/"
+    }
+  ]
 }
