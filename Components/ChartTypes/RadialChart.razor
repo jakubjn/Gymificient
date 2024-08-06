@@ -1,0 +1,88 @@
+﻿@using System.Globalization
+@using System.Text.Json;
+
+@inject IJSRuntime jsRuntime;
+
+<canvas style="@style" id="@Id"></canvas>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public string Name { get; set; }
+
+    [Parameter]
+    public string BarColour { get; set; }
+
+    [Parameter]
+    public string style { get; set; }
+
+    [Parameter]
+    public DateTime StartTime { get; set; }
+
+    [Parameter]
+    public DateTime EndTime { get; set; }
+
+    [Parameter]
+    public Dictionary<Machine, double> MainData { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (MainData.Keys.Count == 0) return;
+
+        string[] machineNames = new string[MainData.Count];
+        double[] machineAverages = new double[MainData.Count];
+
+        int i = 0;
+
+        foreach(Machine machine in MainData.Keys)
+        {
+            machineNames[i] = machine.machineName;
+            machineAverages[i] = MainData[machine];
+
+            i++;
+        }
+
+        var config = new
+        {
+            type = "polarArea",
+
+            options = new
+            {
+                indexAxis = "y",
+                responsive = true,
+                plugins = new
+                {
+                    legend = new
+                    {
+                        display = false,
+                    },
+                    title = new
+                    {
+                        display = true,
+                        text = Name
+                    }
+                }
+            },
+
+            data = new
+            {
+                datasets = new[]
+                {
+                    new
+                    {
+                        data = machineAverages
+                    }
+
+                },
+
+                labels = machineNames
+            }
+        };
+
+        await jsRuntime.InvokeVoidAsync("setup", Id, config);
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}

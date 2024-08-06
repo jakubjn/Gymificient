@@ -1,11 +1,11 @@
 ﻿@inject NavigationManager navManager
 @inject EventService eventService
 
-<button class="btn" style="height: 16vh; background-color:#ccdbdc" @onclick="OnClick">
-    <div class="card-body d-block text-end align-text-top" style="height: 100%; width: 100%">
+<MudCard @onclick="OnClick" Style="height: 16vh; background-color:#ccdbdc">
+    <MudCardHeader Class="justify-start">
         <span style="height: 100%">@number</span>
-    </div>
-</button>
+    </MudCardHeader>
+</MudCard>
 
 @code {
     [Parameter]

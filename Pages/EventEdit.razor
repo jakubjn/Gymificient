@@ -17,58 +17,50 @@
     </div>
 } else
 {
-    <MudPaper Class="m-5" style="width: 90%; height: 90%">
-        <EditForm style="width: 100%; height: 100%" class="m-3 flex-column justify-center align-center" Model="newEvent">
-            <div style="height: 10%" class="text-center">
-                <span style="font-size: 5vw">New event</span>
+    <div class=" d-flex align-center justify-center pa-3" style="width:100%; height: 100%">
+        <MudPaper Class="d-flex flex-column justify-start pa-3 mud-height-full" Style="width: 50%">
+            <div class="align-self-center" style="height: 20%">
+                <MudText Typo="Typo.h2">New Event</MudText>
             </div>
 
-            <br />
-            <br />
+            <MudForm @ref="form" Class="pa-3 d-flex flex-column align-start justify-content-between align-self-start" Style="width: 100%; height: 65%" Model="@newEvent">
+                <MudDatePicker Required="true" @bind-Date="newEvent.date" Label="Date" Class="mud-width-full"/>
 
-            <div class="d-flex flex-column justify-content-around" style="width: 100%; height: 70%; margin-left: 3vmin">
-                <div>
-                    <span>Date: </span>
-                    <InputDate class="d-inline" style="width: 20vmin; height: 5vmin" @bind-Value="newEvent!.date">@DateTime.Today</InputDate>
-                </div>
-
-                <div>
-                    <span>Machine: </span>
-                    <InputSelect class="d-inline" style="width: 20vmin; height: 5vmin" @bind-Value="machineName">
-                        @foreach(Machine machine in machines)
+                <div style="margin-bottom: 5vmin" class="d-inline-flex mud-width-full flex-row justify-content-between align-center">
+                    <MudSelect Required="true" @bind-Value="newEvent.machine" T="Machine" Label="Machine">
+                        @foreach (Machine machine in machines)
                         {
-                            <option value="@machine.machineName">@machine.machineName</option>
+                            <MudSelectItem Value="@machine">@machine.machineName</MudSelectItem>
                         }
-                    </InputSelect>
+                    </MudSelect>
+
+                    <MudSelect Required="true" Label="Event Type" @bind-Value="newEvent.eventType" T="ActionType">
+                        <MudSelectItem Value="@ActionType.Service" />
+                        <MudSelectItem Value="@ActionType.Inspection" />
+                        <MudSelectItem Value="@ActionType.Repair" />
+                    </MudSelect>
                 </div>
 
-                <div>
-                    <span>Event Type: </span>
-                    <InputSelect class="d-inline" style="width: 20vmin; height: 5vmin" @bind-Value="newEvent!.eventName">
-                        <option>Service</option>
-                        <option>Repair</option>
-                        <option>Inspection</option>
-                    </InputSelect>
-                </div>
+                <MudTextField Variant="Variant.Filled" Label=" Information" @bind-Value="newEvent.info" Lines="7" AutoGrow FullWidth />
+            </MudForm>
 
-                <div>
-                    <span>Notes: </span>
-                    <InputTextArea class="d-inline" style="width: 20vmin; height: 5vmin" @bind-Value="newEvent!.eventName" />
-                </div>
+            <div class="pa-3" style="height: 15%">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="true" FullWidth @onclick="Submit">Save</MudButton>
             </div>
-        </EditForm>
-    </MudPaper>
+
+        </MudPaper>
+    </div>
 }
 
 @code {
     [Parameter]
     public int dayNumber { get; set; }
 
-    private DataAccess.Data.EventData newEvent = new DataAccess.Data.EventData();
-
-    private string? machineName;
+    private EventData newEvent = new EventData();
 
     private List<Machine>? machines;
+
+    private MudForm form;
 
     protected override async Task OnInitializedAsync()
     {
@@ -85,16 +77,14 @@
         machines = await machineService.GetMachinesAsync(userSession.OrgId);
     }
 
-    private void Submit()
+    private async Task Submit()
     {
-        if (machineName is null) return;
+        await form.Validate();
 
-        //newEvent.machine = machineService.GetMachineFromName(machineName);
-        eventService.NewEvent(newEvent);
-
-        navManager.NavigateTo("/dashboard");
+        if(form.IsValid)
+        {
+            await eventService.NewEventAsync(newEvent);
+            navManager.NavigateTo("/dashboard");
+        }
     }
-
-    //Presto, Estry(Amazon), Athena, Superset
-    //Openpose, Bria, 
 }

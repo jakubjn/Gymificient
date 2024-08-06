@@ -1,0 +1,50 @@
+﻿@namespace GymSystem.Components
+
+@inject MachineService machineService;
+@inject UtilisationService utilisationService;
+@inject NavigationManager navManager;
+
+@inject AuthenticationStateProvider authStateProvider;
+
+<MudPaper Class="pa-3 d-flex flex-column justify-content-center align-center" Style="height: 60vh; width: 100%">
+    @if(mainData is not null)
+    {
+        <RadialChart 
+            MainData="@mainData"
+            Name="Average All Time Use"
+            Id="machineRadialChart1">
+        </RadialChart>
+    }
+</MudPaper>
+
+@code {
+    private Dictionary<Machine, double> mainData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthorisationService authService = (AuthorisationService)authStateProvider;
+
+        UserSession userSession = await authService.GetUserSessionAsync();
+
+        if (userSession == null || userSession.UserName == "Guest")
+        {
+            navManager.NavigateTo("login", true);
+            return;
+        }
+
+        var machines = await machineService.GetMachinesAsync(userSession.OrgId);
+
+        if (machines is null) return;
+
+        mainData = new Dictionary<Machine, double>();
+
+        foreach(Machine machine in machines)
+        {
+            double usage = await utilisationService.GetAllMachineUsageAsync(machine.Id);
+
+            if (usage == 0) continue ;
+
+            mainData[machine] = usage;
+        }
+    }
+}

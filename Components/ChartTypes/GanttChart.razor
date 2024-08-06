@@ -3,7 +3,7 @@
 
 @inject IJSRuntime jsRuntime;
 
-<canvas id="@Id"></canvas>
+<canvas style="@style" id="@Id"></canvas>
 
 @code {
     [Parameter]
@@ -13,10 +13,16 @@
     public string Name { get; set; }
 
     [Parameter]
-    public DateTime StartTime { get; set; }
+    public string BarColour { get; set; }
 
     [Parameter]
-    public DateTime EndTime { get; set; }
+    public DateTime? StartTime { get; set; }
+
+    [Parameter]
+    public DateTime? EndTime { get; set; }
+
+    [Parameter]
+    public string style { get; set; }
 
     [Parameter]
     public Dictionary<Machine, List<KeyValuePair<DateTime,DateTime>>> MainData { get; set; }
@@ -24,6 +30,7 @@
     public class Dataset
     {
         public DateTime[][] data { get; set; }
+        public string backgroundColor { get; set; }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -34,7 +41,7 @@
 
         List<KeyValuePair<DateTime, DateTime>> MinMaxCount = MainData[MainData.Keys.First<Machine>()];
 
-        var dataValues = new Dataset[5];
+        var dataValues = new Dataset[100];
 
         int i = 0;
 
@@ -68,6 +75,7 @@
                 var dataClass = dataValues[x];
 
                 dataClass.data[i] = new[] { pair.Key, pair.Value };
+                dataClass.backgroundColor = BarColour;
 
                 dataValues[x] = dataClass;
 
@@ -124,11 +132,6 @@
                 labels = machineNames
             }
         };
-
-        // var options = new JsonSerializerOptions { WriteIndented = true };
-        // var JsonString = JsonSerializer.Serialize(config, options);
-
-        // System.Diagnostics.Debug.WriteLine(JsonString);
 
         await jsRuntime.InvokeVoidAsync("setup", Id, config);
 

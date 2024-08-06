@@ -1,0 +1,57 @@
+﻿<MudDialog>
+    <DialogContent>
+        <div class="d-inline-flex justify-content-between align-center" style="width:100%">
+            <div class="d-inline" style="width: 40%">
+                <MudDatePicker Label="Start Date" @bind-Date="@startDate"></MudDatePicker>
+                <MudTimePicker Label="Start Time" @bind-Time="@startTime"></MudTimePicker>
+            </div>
+
+            <div style="width:40%">
+                <MudDatePicker Label="End Date" @bind-Date="@endDate"></MudDatePicker>
+                <MudTimePicker Label="End Time" @bind-Time="@endTime"></MudTimePicker>
+            </div>
+        </div>
+    </DialogContent>
+    <DialogActions>
+
+        <MudButton Color="Color.Primary" OnClick="Save">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public OptionsData options { get; set; }
+
+    public TimeSpan? startTime { get; set; }
+    public DateTime? startDate { get; set; }
+
+    public TimeSpan? endTime { get; set; }
+    public DateTime? endDate { get; set; }
+
+    public Machine[] machinesDisplaying { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        startTime = options.startEndTime[0];
+        endTime = options.startEndTime[1];
+
+        startDate = options.startEndDate[0];
+        endDate = options.startEndDate[1];
+
+        base.OnParametersSet();
+    }
+
+    private void Save()
+    {
+        options.startEndTime[0] = startTime;
+        options.startEndTime[1] = endTime;
+
+        options.startEndDate[0] = startDate;
+        options.startEndDate[1] = endDate;
+
+        MudDialog.Close(DialogResult.Ok(options));
+    } 
+}

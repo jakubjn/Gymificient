@@ -16,6 +16,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddAuthenticationCore();
 
+
 builder.Services.AddSingleton<MachineService>();
 builder.Services.AddSingleton<EventService>();
 builder.Services.AddSingleton<UtilisationService>();

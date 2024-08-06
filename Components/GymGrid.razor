@@ -11,22 +11,24 @@
             <span class="visually-hidden">Loading...</span>
         </div>
     </div>
-} else
+}
+else
 {
-    <div style="width: 100%" class="grid-container">
+    <MudGrid Justify="@Justify.Center">
         @foreach (Machine machine in machines)
         {
-            <div>
+            <MudItem>
                 <GymDisplay machineData="@machine" OnClick="@((Machine data) => OnClick(data))" />
-            </div>
+            </MudItem>
         }
-    </div>
+    </MudGrid>
 }
 
 @code {
     public List<Machine>? machines;
 
-    protected override async Task OnInitializedAsync() {
+    protected override async Task OnInitializedAsync()
+    {
         AuthorisationService authService = (AuthorisationService)authStateProvider;
 
         UserSession userSession = await authService.GetUserSessionAsync();

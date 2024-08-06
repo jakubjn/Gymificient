@@ -4,45 +4,29 @@
 @inject NavigationManager navManager;
 
 <AuthorizeView Roles="admin">
+    <MudScrollToTop>
+        <MudFab Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.ArrowCircleUp" />
+    </MudScrollToTop>
 
-    <div class="card-header" style="height: fit-content; height: fit-content; background-color: #FFFFFF">
-        <h1 class="text-center align-text-top" style="justify-self: center"><strong>Dashboard</strong></h1>
-    </div>
-
-    <MudCarousel Style="width: 100%; height: 200vh" ShowArrows="true" ShowBullets="false" EnableSwipeGesture="true" AutoCycle="false" TData="object">
-        <MudCarouselItem Transition="@Transition.Slide" class="" style="width: 100%">
+    <MudTabs Centered Style="width: 100%; height:fit-content">
+        <MudTabPanel Text="Dashboard" Transition="@Transition.Slide" class="" style="width: 100%; height: fit-content">
             <div class="m-3 d-flex flex-column align-center">
-                <div class="d-flex flex-row justify-content-between align-center" style="width: 100%">
-                    <RecommendedActions />
-                    <TotalUsagePie />
-                </div>
-
-                <br />
-                <br />
-
-                <MachineUsageBar />
-
-                <br />
-                <br />
-
-                <div class="d-flex flex-row justify-content-between align-content-center" style="width: 100%">
-                    <WorstMachines />
-                </div>
+                <FrontAnalytics />
             </div>
-        </MudCarouselItem>
+        </MudTabPanel>
 
-        <MudCarouselItem Transition="@Transition.Slide" style="width: 100">
+        <MudTabPanel Text="Machines" style="width: 100%; height: fit-content">
             <div class="m-3 d-flex flex-column align-center">
                 <GymGrid />
             </div>
-        </MudCarouselItem>
+        </MudTabPanel>
 
-        <MudCarouselItem Transition="@Transition.Slide" style="width: 100%">
+        <MudTabPanel Text="Calendar" Transition="@Transition.Slide" style="width: 100%; height: fit-content">
             <div class="m-3 d-flex flex-column align-center">
                 <Calendar />
             </div>
-        </MudCarouselItem>
-    </MudCarousel>
+        </MudTabPanel>
+    </MudTabs>
 
 </AuthorizeView>
 

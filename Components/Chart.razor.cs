@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using BlazorBootstrap;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
 namespace GymSystem.Components
@@ -13,6 +14,15 @@ namespace GymSystem.Components
     public partial class Chart
     {
         [Parameter]
+        public bool LegendVisible { get; set; } = true;
+
+        [Parameter]
+        public float Min { get; set; }
+
+        [Parameter]
+        public float Max { get; set; }
+
+        [Parameter]
         public string Id { get; set; }
 
         [Parameter]
@@ -22,13 +32,19 @@ namespace GymSystem.Components
         public string[] Data { get; set; }
 
         [Parameter]
-        public string[] BackgroundColor { get; set; }
+        public string BackgroundColor { get; set; }
 
         [Parameter]
         public string[] Labels { get; set; }
 
         [Parameter]
         public string Class { get; set; }
+
+        [Parameter]
+        public string Title { get; set; }
+
+        [Parameter]
+        public bool TitleDisplay { get; set; }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -40,7 +56,22 @@ namespace GymSystem.Components
                     Responsive = true,
                     Scales = new
                     {
-                        
+                        y = new {
+                            Min = Min,
+                            Max = Max,
+                        }
+                    },
+                    Plugins = new
+                    {
+                        Legend = new
+                        {
+                            Display = LegendVisible
+                        },
+                        Title = new
+                        {
+                            Display = TitleDisplay,
+                            Text = Title
+                        }
                     }
                 },
 

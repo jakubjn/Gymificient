@@ -5,98 +5,130 @@
 @inject UtilisationService utilisationService;
 @inject AuthenticationStateProvider authStateProvider;
 
-@if(machine is null)
+@if (machine is null)
 {
     <div class="d-flex justify-center align-center">
         <div class="spinner-border align-self-center justify-self-center" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
     </div>
-} else
+}
+else
 {
     <div class="card-header" style="height: fit-content;">
         <h1 class="text-center" style="justify-self: center;"><strong>@machine.machineName</strong></h1>
     </div>
 
-    <div class="d-lg-inline-flex stat-image-display p-lg-5">
-        <MudPaper class="d-flex justify-content-between p-5 pa-4 bg-main" Height="100%" Width="50%">
-            <div class="stat-child">
-                <div>
-                    <span>Last Serviced:</span>
-                    <InputDate @bind-Value="@machine.lastService"></InputDate>
+    <MudGrid Spacing="5" Class="pa-3">
+
+        <MudItem xs="6">
+            <MudPaper class="d-flex flex-row justify-content-between pa-4 mud-height-full">
+                <div class="d-flex flex-column justify-content-around">
+                    <div>
+                        <MudDatePicker Label="Last Service" @bind-Date="@machine.lastService"></MudDatePicker>
+                    </div>
+
+                    <div>
+                        <MudDatePicker Label="Next Service" @bind-Date="@machine.nextService"></MudDatePicker>
+                    </div>
+
+                    <div>
+                        <MudDatePicker Label="Warranty" @bind-Date="@machine.warranty"></MudDatePicker>
+                    </div>
                 </div>
 
-                <div>
-                    <span>Next Service:</span>
-                    <InputDate @bind-Value="@machine.nextService"></InputDate>
+                <div class="d-flex flex-column justify-content-around" style="margin-left: 5vmin">
+                    <div>
+                        <MudNumericField Label="Serial Number" T="double"></MudNumericField>
+                    </div>
+
+                    <div>
+                        <MudTextField AutoGrow Label="Made/Model" T="string"></MudTextField>
+                    </div>
+
+                    <div>
+                        <MudNumericField Label="Service Number" T="double"></MudNumericField>
+                    </div>
                 </div>
 
-                <div>
-                    <span>Warranty:</span>
-                    <InputDate @bind-Value="@machine.warranty"></InputDate>
-                </div>
-            </div>
+                <MudButton @onclick="NewContactDetails" Class="align-self-end m-3" Style="background-color: deepskyblue">Save</MudButton>
+            </MudPaper>
+        </MudItem>
 
-            <MudButton @onclick="NewContactDetails" Class="align-self-end m-3" Style="background-color: deepskyblue">Save</MudButton>
-        </MudPaper>
-
-        <MudPaper Class="pa-4">
-            <div class="stat-child">
-                <MudChart ChartType="MudBlazor.ChartType.Donut"
-                     InputData="@donut"
-                     InputLabels="@(new string[] {"Average Use", "Average Unused"})">
+        <MudItem xs="6">
+            <MudPaper Class="d-flex flex-column justify-center align-center pa-4">
+                <MudChart Height="100%"
+                          ChartOptions="@(new ChartOptions {ChartPalette = new[] {Color, "#9ad1d4"}})"
+                          ChartType="MudBlazor.ChartType.Donut"       
+                          InputData="@(new double[] { mainAverage, 100-mainAverage })"
+                          InputLabels="@(new string[] {"Time Used", "Time Not Used"})">
                 </MudChart>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12">
+            <div class="justify-start align-start" style="width: 100%">
+                <MudButton @onclick="OpenDialogAsync">Chart Options</MudButton>
             </div>
-        </MudPaper>
-    </div>
 
-    <MudPaper class="m-5 pa-4 d-flex justify-center align-center bg-main" style="width: 90%; height: 40vw">
-        <div style="width: 80%; height:80%">
-            <MudChart ChartOptions="@(new MudBlazor.ChartOptions {YAxisTicks=10})" ChartType="MudBlazor.ChartType.Bar" XAxisLabels="@XLabels" ChartSeries="@series" Width="100%" Height="100%"></MudChart>
-        </div>
-    </MudPaper>
+            <MudPaper class="d-flex justify-center align-center pa-4" style="height: 80vmin">
 
-    <MudTable Class="m-5 pa-4 bg-main" Items="@problems" Hover="true" Breakpoint="MudBlazor.Breakpoint.Sm">
-        <HeaderContent>
-            <MudTh>Date</MudTh>
-            <MudTh>Problem</MudTh>
-            <MudTh><MudButton Style="background-color: deepskyblue">New Problem</MudButton></MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Date">@context.Date</MudTd>
-            <MudTd DataLabel="Sign">@context.Problem</MudTd>
-            <MudTd></MudTd>
-        </RowTemplate>
-    </MudTable>
+                @if(machineAverageUse is not null)
+                {
+                    <Chart Class="m-5"
+                           BackgroundColor="@Color"
+                           TitleDisplay="true"
+                           Title="Average Machine Use"
+                           LegendVisible="false"
+                           Data="@machineAverageUse"
+                           Id="bar1"
+                           Type="GymSystem.Components.ChartType.bar"
+                           Labels="@timeFrames"
+                           Min="0"
+                           Max="100">
+                    </Chart>
+                }
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudTable Class="pa-4 bg-main" Items="@problems" Hover="true" Breakpoint="MudBlazor.Breakpoint.Sm">
+                <HeaderContent>
+                    <MudTh>Date</MudTh>
+                    <MudTh>Problem</MudTh>
+                    <MudTh><MudButton @onclick="OnClick" Style="background-color: deepskyblue">New Problem</MudButton></MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Date">@context.Date</MudTd>
+                    <MudTd DataLabel="Sign">@context.Problem</MudTd>
+                    <MudTd></MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudItem>
+    </MudGrid>
 }
-
 
 @code {
     [Parameter]
     public string? machineName { get; set; }
 
-    public List<MachineProblem> problems = new List<MachineProblem>()
-    {
-        new MachineProblem()
-        {
-            Date = DateTime.Today,
-            Problem = "Someone sat on the machine and broke it"
-        },
+    [Inject]
+    public IDialogService DialogService { get; set; }
 
-        new MachineProblem()
-        {
-            Date = DateTime.Today,
-            Problem = "New Member tried to use rowing machine to hit legs"
-        }
-    };
+    private string[] machineAverageUse;
+    private string[] timeFrames;
+
+    private double mainAverage = 0;
+
+    private string Color = "#003249";
+
+    private int stepCount = -60;
+
+    public List<MachineProblem> problems;
 
     private Machine? machine;
 
     public List<ChartSeries> series;
-
-    public string[] XLabels;
-
-    private double[] donut = new double[2];
 
     protected override async Task OnParametersSetAsync()
     {
@@ -116,29 +148,35 @@
 
         if (machine is null) return;
 
-        double[] usage = await utilisationService.GetAllMachineUsageAsync(machine.Id);
+        problems = await machineService.GetProblemsAsync(machine.Id);
 
-        if (usage is null) return;
-
-        series = new List<ChartSeries>()
-        {
-            new ChartSeries()
-            {
-                Name = "Use %",
-                Data = usage
-            },
-        };
-
-        XLabels = new string[usage.Length];
-
-        for(int i = 0; i < XLabels.Length; i++)
-        {
-            XLabels[i] = ((i + 1) * 15).ToString() + "s";
-        }
-
-        donut = new double[2] { machineService.GetMachineAverageUse(machine), 100 - machineService.GetMachineAverageUse(machine) };
+        await SetUsageData();
 
         base.OnParametersSet();
+    }
+
+    private async Task SetUsageData()
+    {
+        DateTime startTime = new DateTime(2024, 08, 2, 17, 0, 0);
+
+        machineAverageUse = new string[12];
+        timeFrames = new string[12];
+        stepCount = -60;
+
+        for (int i = 0; i < 12; i++)
+        {
+            DateTime t1 = startTime.AddMinutes(stepCount * (12 - i));
+            DateTime t2 = startTime.AddMinutes(stepCount * (12 - i - 1));
+
+            double averageUse = await utilisationService.GetAverageUsageOverPeriod(machine.Id, t1, t2);
+
+            machineAverageUse[i] = ((int)(averageUse)).ToString();
+            timeFrames[i] = t1.TimeOfDay.ToString();
+
+            mainAverage += averageUse;
+        }
+
+        mainAverage = mainAverage / machineAverageUse.Length;
     }
 
     private void OnClick()
@@ -151,5 +189,28 @@
         if (machine is null) return;
 
         machineService.SetNewContacts(machine);
+    }
+
+    private async Task OpenDialogAsync()
+    {
+        OptionsData optionsData = new OptionsData
+            {
+                startEndDate = new DateTime?[2],
+                startEndTime = new TimeSpan?[2]
+            };
+
+        DialogOptions dialogOptions = new() { Position = DialogPosition.TopCenter };
+
+        var parameters = new DialogParameters<MachineOptionEdit> {
+            { x => x.options, optionsData }
+        };
+
+        var dialog = await DialogService.ShowAsync<MachineOptionEdit>("Change Options", parameters, dialogOptions);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            OptionsData newOptions = (OptionsData)result.Data;
+        }
     }
 }

@@ -9,41 +9,44 @@
 
 @using Microsoft.JSInterop;
 
-<MudPaper class="d-flex flex-column justify-center pa-4" style="width: 100%; height: 90vh">
+<div class="justify-start" style="width: 100%">
+    <MudButton @onclick="OpenDialogAsync">Chart Options</MudButton>
+</div>
+
+<MudPaper class="d-flex flex-column justify-center pa-2" style="width: 100%; height: 90vh">
     @if(machines is null || MinMaxTimes is null)
     {
         <div class="spinner-border align-self-center justify-self-center" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
     } else
-    {
-        <div style="width:20%">
-            <MudSelect @bind-Value="timeView" T="DateTime" Label="Select Timeframe">
-                <MudSelectItem Value="@(DateTime.Now.AddMinutes(-30))">Last Half-Hour</MudSelectItem>
-                <MudSelectItem Value="@(DateTime.Now.AddMinutes(-60))">Last Hour</MudSelectItem>
-                <MudSelectItem Value="@(DateTime.Now.AddDays(-1))">Last Day</MudSelectItem>
-                <MudSelectItem Value="@(DateTime.Now.AddDays(-7))">Last Week</MudSelectItem>
-            </MudSelect>
-        </div>
-   
-        <GanttChart
+    {  
+        <GanttChart style="width: 100%"
             Name="Sample Gantt Chart"
             Id=@Id
-            StartTime="@timeView"
-            EndTime="DateTime.Now"
+            BarColour="#007ea7"
+            StartTime="@(new DateTime(startDate.Value.Year, startDate.Value.Month, startDate.Value.Day, startTime.Value.Hours, startTime.Value.Minutes, 0))"
+            EndTime="@(new DateTime(endDate.Value.Year, endDate.Value.Month, endDate.Value.Day, endTime.Value.Hours, endTime.Value.Minutes, 0))"
             MainData="@MinMaxTimes">
         </GanttChart>
     }
 </MudPaper>
 
 @code {
+    [Inject]
+    private IDialogService DialogService { get; set; }
+
     public List<Machine>? machines;
 
     private string Id = "usageBar";
 
     private Dictionary<Machine, List<KeyValuePair<DateTime, DateTime>>> MinMaxTimes;
 
-    private DateTime timeView = DateTime.Now.AddMinutes(-200);
+    private TimeSpan? startTime = TimeSpan.Zero;
+    private DateTime? startDate = DateTime.Now;
+
+    private TimeSpan? endTime = DateTime.Now.TimeOfDay;
+    private DateTime? endDate = DateTime.Now;
 
     private string selected = "None";
 
@@ -71,11 +74,38 @@
         }     
     }
 
-    private void ChangeViewTime(DateTime time)
+    private async Task OpenDialogAsync()
     {
-        System.Diagnostics.Debug.WriteLine("Running");
+        OptionsData optionsData = new OptionsData
+        {
+            startEndDate = new DateTime?[2],
+            startEndTime = new TimeSpan?[2]
+        };
 
-        timeView = time;
-        Id = "ChangedBar";
+        optionsData.startEndTime[0] = startTime;
+        optionsData.startEndTime[1] = endTime;
+
+        optionsData.startEndDate[0] = startDate;
+        optionsData.startEndDate[1] = endDate;
+
+        DialogOptions dialogOptions = new() { Position = DialogPosition.TopCenter };
+
+        var parameters = new DialogParameters<MachineOptionEdit> { 
+            { x => x.options, optionsData }
+        };
+
+        var dialog = await DialogService.ShowAsync<MachineOptionEdit>("Change Options", parameters, dialogOptions);
+        var result = await dialog.Result;
+
+        if(!result.Canceled)
+        {
+            OptionsData newOptions = (OptionsData)result.Data;
+
+            startTime = newOptions.startEndTime[0];
+            endTime = newOptions.startEndTime[1];
+
+            startDate = newOptions.startEndDate[0];
+            endDate = newOptions.startEndDate[1];
+        }
     }
 }
