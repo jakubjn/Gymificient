@@ -1,4 +1,4 @@
-﻿@namespace GymSystem.Components
+﻿@* @namespace GymSystem.Components
 
 @inject MachineService machineService;
 @inject NavigationManager navManager;
@@ -45,5 +45,5 @@ else
     public void OnClick(Machine data)
     {
         navManager.NavigateTo("dashboard/" + data.machineName);
-    }
+    } *@
 }

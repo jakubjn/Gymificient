@@ -1,4 +1,4 @@
-﻿@inject NavigationManager navManager
+﻿@* @inject NavigationManager navManager
 @inject EventService eventService
 
 <MudCard @onclick="OnClick" Style="height: 16vh; background-color:#ccdbdc">
@@ -16,3 +16,4 @@
         navManager.NavigateTo("/dashboard/July/" + number);
     }
 }
+ *@

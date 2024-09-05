@@ -1,5 +1,3 @@
-using DataAccess;
-using DataAccess.Controllers;
 using GymSystem.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components;
@@ -16,10 +14,6 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddAuthenticationCore();
 
-
-builder.Services.AddSingleton<MachineService>();
-builder.Services.AddSingleton<EventService>();
-builder.Services.AddSingleton<UtilisationService>();
 builder.Services.AddSingleton<UserService>();
 
 builder.Services.AddScoped<ProtectedSessionStorage>();
