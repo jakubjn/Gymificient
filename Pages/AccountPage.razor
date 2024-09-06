@@ -40,7 +40,7 @@
                     <p class="m-3">
                         Our program is currently invite only. If you wish to access it you must
                         make a request to the owners at gymifficient@gmail.com. Once you have your account,
-                        login using the menu on the right and you will have access to the program.
+                        please login and you will have access to the program.
                     </p>
                 </div>
 
@@ -102,19 +102,22 @@
 
     private async Task VerifyAccount()
     {
-        if(await userService.AuthenticateAccount(userName, password))
-        {
-            AuthorisationService authService = (AuthorisationService)authState;
+        //if(await userService.AuthenticateAccount(userName, password))
+        //{
+         //   AuthorisationService authService = (AuthorisationService)authState;
 
-            UserSession session = await userService.GetNewSession(userName, password);
+          //  UserSession session = await userService.GetNewSession(userName, password);
 
-            await authService.UpdateAuthenticationState(session);
+          //  await authService.UpdateAuthenticationState(session);
 
-            navManager.NavigateTo("dashboard");
-        } else
-        {
-            error = true;
-        }
+          //  navManager.NavigateTo("dashboard");
+        //} else
+        //{
+          //  error = true;
+        //}
+        
+        Console.WriteLine("fetch login");
+        error = true;
     }
 }
  
