@@ -1,60 +1,34 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Home</PageTitle>
 
-<div class="d-flex align-content-center" style="flex-direction: column; background-color: #FFFFFF">
-    <h1 class="card-header text-center"> <strong>About Us</strong> </h1>
+<HomePageBlock BigText="Better decisions for gym owners, powered by actionable analytics"
+			   SmallText="Our system will provide you with accurate data about how machines in your
+               gym are performing, and how you can optimise them to provide a better customer
+               experience and increase retention in your gym"
+			   ImageLeft=false
+			   ImageURL="Images/GymLayout.png"
+			   Colour="#FFFFFF"
+			   Title="About Us">
+</HomePageBlock>
 
+<HomePageBlock BigText="Insights that gym-goers and managers won't give you"
+			   SmallText="We use cutting edge technology to track machine usage
+			   throughout the day. We then compile this data into useful graphs and actionable steps."
+			   ImageLeft=true
+			   ImageURL="Images/Dumbell.png"
+			   Colour="#c7c7c7"
+			   Title="Our Technology">
+</HomePageBlock>
 
-    <div class="d-inline-flex justify-content-between m-5 align-self-center align-items-center" style="width: 80%;">
-        <div class="text-start" style="width: 50%">
-            <span class="big-text">
-                <strong>Gymificient is a management software for gym owners who care about quality</strong>
-            </span>
-             
-            <br />
-            <br />
-
-            <span class="small-text">
-                We provide foot-traffic analytics for your gym, as well as info about the machines that the customers use
-            </span>
-        </div>
-
-        <img src="Images/GymLayout.png" style="width:45%"/>
-    </div>
-</div>
-
-<div class="d-flex align-content-center" style="background-color: #c7c7c7 ;flex-direction: column">
-    <h1 class="text-center card-header"><strong>Our Technology</strong></h1>
-
-    <div class="d-inline-flex justify-content-between m-5 align-self-center align-items-center" style="width: 80%">
-        <img src="Images/Dumbell.png" style="width:45%" />
-
-        <div class="text-start" style="width:45%">
-            <span class="small-text">
-                We use cutting edge technology to track machine usage
-                throughout the day. We then compile this data into useful graphs and insights, 
-                to help you make informed decisions about your gym and business strategy. We utilise existing
-                cameras present in the gym without the need for additional hardware.
-            </span>
-        </div>
-    </div>
-</div>
-
-<div class="d-flex align-content-center" style="background-color: #FFFFFF; flex-direction: column">
-    <h1 class="text-center card-header"><strong>Why Us?</strong></h1>
-
-    <div class="d-inline-flex justify-content-between m-5 align-self-center align-items-center" style="width: 80%">
-        <div class="text-start" style="width:45%">
-            <span class="small-text">
-                A medium-sized gym spends rough €20,000 per annum on maintaining their
-                equipment. With our system this could be reduced by at least 15%. Properly maintained machines also increase the quality
-                of the gym, this results in higher customer retention and decreased churn.
-            </span>
-        </div>
-
-        <img class="rounded-3" src="https://www.shutterstock.com/image-photo/closeup-asian-young-officer-fitness-600nw-2314483111.jpg" style="width:45%" />
-    </div>
-</div>
+<HomePageBlock BigText="Gyms spend on average €20,000 per annum on maintenance"
+			   SmallText="By tracking which machines are used more and less often, maintenance can be
+			   done pro-actively instead of re-actively. Providing a better customer experience, and
+			   reducing costs."
+			   ImageLeft=false
+			   ImageURL="https://www.shutterstock.com/image-photo/closeup-asian-young-officer-fitness-600nw-2314483111.jpg"
+			   Colour="#FFFFFF"
+			   Title="Why Us?">
+</HomePageBlock>
 
 

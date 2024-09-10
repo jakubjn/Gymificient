@@ -1,0 +1,55 @@
+﻿<div class="d-flex align-content-center" style="flex-direction: column; background-color: @Colour; height: 100vmin">
+
+    <h1 class="card-header text-center big-text"> <strong>@Title</strong> </h1>
+
+
+    <div class="d-inline-flex justify-content-between align-self-center align-items-center" style="width: 85%; height: 85%">
+        @if(ImageLeft)
+        {
+            <img src=@ImageURL style="width:45%" />
+        }
+
+        <div class="text-start" style="width: 45%">
+            <span class="big-text">
+                <strong>@BigText</strong>
+            </span>
+
+            <br />
+            <br />
+
+            <span class="small-text">
+                @SmallText
+            </span>
+        </div>
+
+        @if(!ImageLeft)
+        {
+            <img src=@ImageURL style="width:45%" />
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string BigText { get; set; }
+
+    [Parameter]
+    public string SmallText { get; set; }
+
+    [Parameter]
+    public string ImageURL { get; set; }
+
+    [Parameter]
+    public bool ImageLeft { get; set; }
+
+    [Parameter]
+    public string Colour { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        
+    }
+}

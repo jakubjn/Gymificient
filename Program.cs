@@ -10,6 +10,7 @@ using MudBlazor.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddAuthenticationCore();
@@ -17,7 +18,7 @@ builder.Services.AddAuthenticationCore();
 builder.Services.AddSingleton<UserService>();
 
 builder.Services.AddScoped<ProtectedSessionStorage>();
-builder.Services.AddScoped<AuthenticationStateProvider, GymSystem.Authorization.AuthorisationService>();
+builder.Services.AddScoped<AuthenticationStateProvider, AuthorisationService>();
 
 builder.Services.AddMudServices();
 builder.Services.AddBlazorBootstrap();

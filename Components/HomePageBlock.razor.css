@@ -2,15 +2,15 @@
     justify-content: space-between;
     flex-direction: row;
 
-    height: 50vh;
+    height: 50vmin;
     width: 100%;
 }
 
 .main-node > div {
     display: inline-flex;
 
-    width: 50vh;
-    height: 50vh;
+    width: 50vmin;
+    height: 50vmin;
 }
 
 .gym-layout-image {

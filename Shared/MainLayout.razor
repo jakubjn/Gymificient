@@ -1,5 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
+@inject IJSRuntime js;
+
 <PageTitle>GymSystem</PageTitle>
 
 <MudThemeProvider />
@@ -8,11 +10,33 @@
 <MudSnackbarProvider />
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+    <CascadingValue Value="isMobile">
 
-    <main>
-        @Body
-    </main>
+        @if(!isMobile)
+        {
+            <div class="sidebar">
+                <NavMenu />
+            </div>
+        } else
+        {
+            <TopNavMenu />
+        }
+
+        <main>
+            @Body
+        </main>
+    </CascadingValue>
 </div>
+
+@code {
+    public bool isMobile { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            isMobile = await js.InvokeAsync<bool>("mobileCheck");
+            StateHasChanged();
+        }
+    }
+}
