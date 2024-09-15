@@ -1,5 +1,24 @@
-﻿<MudAppBar Color="Color.Primary" Fixed="false">
-    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" />
+﻿<MudAppBar Style="background-color: #FFFFFF;" Fixed="false">
+    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Default" Edge="Edge.Start" OnClick="ToggleDrawer" />
     <MudSpacer />
-    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" />
+    <MudIconButton>
+        <img src="Images/GymLogo.png" alt="Gymificient" style="width: 28px; height: 33px;" />
+    </MudIconButton>
 </MudAppBar>
+
+<MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Left" Color="Color.Default">
+    <MudNavMenu>
+        <MudNavLink Href="/" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+        <MudNavLink Href="/team" Icon="@Icons.Material.Filled.Group">Team</MudNavLink>
+        <MudNavLink Href="/login" Icon="@Icons.Material.Filled.AccountCircle">Dashboard</MudNavLink>
+    </MudNavMenu>
+</MudDrawer>
+
+@code {
+    private bool _drawerOpen = false;
+
+    private void ToggleDrawer()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}
