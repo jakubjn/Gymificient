@@ -2,8 +2,7 @@
 
 <PageTitle>Team</PageTitle>
 
-@if (!isMobile)
-{
+@if (!isMobile) {
     <MudPaper Class="card-header text-center" Style="background-color: #F7F7F7;" Elevation="0">
         <MudText Typo="Typo.h4">
             <strong>Meet the Team</strong>
@@ -62,7 +61,9 @@
                 </MudText>
             </MudPaper>
         </MudHidden>
-        <MudGrid>
+        <br/>
+        <br/>
+        <MudGrid Justify="Justify.Center" AlignItems="AlignItems.Center" Spacing="3">
             <MudItem xs="12" sm="6" md="4" lg="3">
                 @foreach (var gymbro in TeamMembers)
                 {
@@ -85,6 +86,8 @@
                             }
                         </div>
                     </div>
+                    <br/>
+                    <br/>
                 }
             </MudItem>
         </MudGrid>

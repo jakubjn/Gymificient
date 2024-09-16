@@ -16,7 +16,7 @@
 .team-container {
     margin-left: 100px;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     gap: 80px; 
     width: 90%;
     max-width: 1200px;
