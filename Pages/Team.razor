@@ -6,47 +6,28 @@
 
 <div class="team-section">
     <div class="team-container">
-        <div class="team-member">
-            <img src="Images/Udaiveer.jpg" alt="Udaiveer Parihar" class="team-photo" />
-            <h3 class="team-name">Udaiveer Parihar</h3>
-            <p class="team-role">Biz-Ops</p>
-            <div class="social-links">
-                <a href="https://www.linkedin.com/in/udaiveer-parihar-460272230/" target="_blank" class="btn-linkedin">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-            </div>
-        </div>
-        <div class="team-member">
-            <img src="Images/Jakub.jpg" alt="Jakub Janoska" class="team-photo" />
-            <h3 class="team-name">Jakub Janoska</h3>
-            <p class="team-role">Front End</p>
-            <div class="social-links">
-                <a href="https://www.linkedin.com/in/jakub-janoska-19a7b8313/" target="_blank" class="btn-linkedin">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-                <a href="https://github.com/jakubjn" target="_blank" class="btn-github">
-                    <i class="fab fa-github"></i>
-                </a>
-            </div>
-        </div>
-
-        
-        <div class="team-member">
-            <img src="Images/Nathan.jpg" alt="Nathan Manley" class="team-photo" />
-            <h3 class="team-name">Nathan Manley</h3>
-            <p class="team-role">Back End</p>
-
-            <div class="social-links">
-
-                <a href="https://www.linkedin.com/in/nathan-manley/" target="_blank" class="btn-linkedin">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-                <a href="https://github.com/macmanley" target="_blank" class="btn-github">
-                    <i class="fab fa-github"></i>
-                </a>
-            </div>
-        </div>
-
+            @foreach (var gymbro in TeamMembers)
+            {
+                <div class="team-member">
+                    <img src="@gymbro.ImageURL" alt="@gymbro.Name" class="team-photo"/>
+                    <h3 class="team-member-name">@gymbro.Name</h3>
+                    <p class="team-role">@gymbro.Role</p>
+                    <div class="social-links">
+                        @if (!string.IsNullOrEmpty(@gymbro.LinkedinURL))
+                        {
+                            <a href="@gymbro.LinkedinURL" target="_blank" class="btn-linkedin">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                        }
+                        @if (!string.IsNullOrEmpty(@gymbro.GithubURL))
+                        {
+                            <a href="@gymbro.GithubURL" target="_blank" class="btn-github">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
         <br />
     </div>
 
@@ -60,3 +41,45 @@
         </span>
     </div>
 </div>
+
+@code {
+    [CascadingParameter]
+    public bool isMobile { get; set; }
+    
+    private List<TeamMember> TeamMembers = new List<TeamMember>
+    {
+        new TeamMember
+        {
+            Name = "Udaiveer Parihar",
+            Role = "Biz-Ops",
+            ImageURL = "Images/Udaiveer.jpg",
+            LinkedinURL = "https://www.linkedin.com/in/udaiveer-parihar-460272230/"
+        },
+        new TeamMember
+        {
+            Name = "Jakub Janoska",
+            Role = "Front End",
+            ImageURL = "Images/Jakub.jpg",
+            LinkedinURL = "https://www.linkedin.com/in/jakub-janoska-19a7b8313/",
+            GithubURL = "https://github.com/jakubjn"
+        },
+        new TeamMember
+        {
+            Name = "Nathan Manley",
+            Role = "Back End",
+            ImageURL = "Images/Nathan.jpg",
+            LinkedinURL = "https://www.linkedin.com/in/nathan-manley/",
+            GithubURL = "https://github.com/macmanley"
+        }
+    };
+
+    public class TeamMember
+    {
+        public string Name { get; set; }
+        public string Role { get; set; }
+        public string ImageURL { get; set; }
+        public string LinkedinURL { get; set; }
+        public string GithubURL { get; set; }
+    }
+
+}
