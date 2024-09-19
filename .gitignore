@@ -361,3 +361,10 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Pages/AccountPage.razor
+/Pages/Team.razor.css
+/wwwroot/Images/Jakub.JPG
+/wwwroot/Images/Nathan.JPG
+/wwwroot/Images/Udaiveer.JPG
+/.gitignore
+/.gitignore
