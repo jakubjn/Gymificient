@@ -1,0 +1,190 @@
+﻿@page "/login"
+
+@inject AuthenticationStateProvider authState;
+@inject UserService userService;
+@inject NavigationManager navManager;
+
+@if(!isMobile)
+{
+    <div class="mud-width-full mud-height-full d-flex align-center justify-center">
+        <AuthorizeView Roles="admin">
+            <Authorized>
+                <div style="width:80vw;">
+                    <MudPaper Class="d-flex flex-column m-5 pa-4" style="height: 85vh">
+                        <div class="d-inline-flex flex-column justify-content-center align-center" style="width:100%; height: 20%">
+                            <h1>Welcome!</h1>
+                        </div>
+
+                        <div class="pa-5 flex-row d-inline-flex justify-content-between align-end" style="width:100%; height: 85%">
+                            <div style="width: 50%; height: 100%" class="flex-column d-flex justify-content-between align-start">
+                                <MudTextField Variant="Variant.Outlined" Adornment="Adornment.Start" AutoGrow Typo="Typo.h5" AdornmentIcon="@Icons.Material.Filled.Man" ReadOnly="true" T="string" Value="@displayName"></MudTextField>
+
+                                <MudTextField Variant="Variant.Outlined" Adornment="Adornment.Start" AutoGrow Typo="Typo.h5" AdornmentIcon="@Icons.Material.Filled.Key" ReadOnly="true" T="string" Value="@OrgID.ToString()"></MudTextField>
+
+                                <MudTextField Variant="Variant.Outlined" Adornment="Adornment.Start" AutoGrow ReadOnly="true" Typo="Typo.h5" T="string" AdornmentIcon="@Icons.Material.Filled.Portrait" Value="@Role" />
+                            </div>
+
+                            <div style="margin-bottom: 3vmin ;width: 50%; height: 40%" class="flex-column d-flex justify-content-evenly align-end">
+                                <MudButton Color="Color.Error" Variant="Variant.Filled">Logout</MudButton>
+
+                                <MudButton Color="Color.Primary" Variant="Variant.Filled">Download Desktop App</MudButton>
+                            </div>
+                        </div>
+                    </MudPaper>
+                </div>
+            </Authorized>
+
+            <NotAuthorized>
+                <div style="width:80vw;">
+                    <MudPaper Class="d-flex flex-row m-5" style="height: 85vh">
+                        <div class="m-3 bg-light d-inline-flex flex-column justify-content-center align-center" style="width:50%; height: 80vh">
+                            <h1>Welcome!</h1>
+
+                            <p class="m-3">
+                                Our program is currently invite only. If you wish to access it you must
+                                make a request to the owners at gymifficient@gmail.com. Once you have your account,
+                                please login and you will have access to the program.
+                            </p>
+                        </div>
+
+                        <div class="m-3 bg-light flex-column d-inline-flex justify-content-evenly align-center" style="width:50%; height: 80vh">
+                            <h1>Login</h1>
+
+                            <div>
+                                <MudTextField Error="@error" @bind-Value="userName" Label="Enter Username" />
+
+                                <MudTextField Error="@error" Style="margin-bottom: 20%" @bind-Value="password" InputType="@InputType.Password" Label="Enter Password" />
+                            </div>
+
+                            <MudButton @onclick="VerifyAccount">Login</MudButton>
+                        </div>
+                    </MudPaper>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+} else
+{
+    <div class="mud-width-full mud-height-full d-flex align-center justify-center">
+        <AuthorizeView Roles="admin">
+            <Authorized>
+                <div style="width:90vw;">
+                    <MudPaper Class="d-flex flex-column m-5 pa-4" style="height: 85vh">
+                        <div class="d-inline-flex flex-column justify-content-center align-center" style="width:100%; height: 20%">
+                            <h1>Welcome!</h1>
+                        </div>
+
+                        <div class="pa-5 flex-row d-inline-flex justify-content-between align-end" style="width:100%; height: 85%">
+                            <div style="width: 50%; height: 100%" class="flex-column d-flex justify-content-between align-start">
+                                <MudTextField Variant="Variant.Outlined" Adornment="Adornment.Start" AutoGrow Typo="Typo.h5" AdornmentIcon="@Icons.Material.Filled.Man" ReadOnly="true" T="string" Value="@displayName"></MudTextField>
+
+                                <MudTextField Variant="Variant.Outlined" Adornment="Adornment.Start" AutoGrow Typo="Typo.h5" AdornmentIcon="@Icons.Material.Filled.Key" ReadOnly="true" T="string" Value="@OrgID.ToString()"></MudTextField>
+
+                                <MudTextField Variant="Variant.Outlined" Adornment="Adornment.Start" AutoGrow ReadOnly="true" Typo="Typo.h5" T="string" AdornmentIcon="@Icons.Material.Filled.Portrait" Value="@Role" />
+                            </div>
+
+                            <div style="margin-bottom: 3vmin ;width: 50%; height: 40%" class="flex-column d-flex justify-content-evenly align-end">
+                                <MudButton Color="Color.Error" Variant="Variant.Filled">Logout</MudButton>
+
+                                <MudButton Color="Color.Primary" Variant="Variant.Filled">Download Desktop App</MudButton>
+                            </div>
+                        </div>
+                    </MudPaper>
+                </div>
+            </Authorized>
+
+            <NotAuthorized>
+                <div style="width:90vw;">
+                    <MudPaper Class="d-flex flex-column justify-content-between m-5 p-3" style="height: 85vh">
+                        <div class="bg-light d-inline-flex flex-column justify-content-center align-center" style="width:100%; height: 49%">
+                            <h1>Welcome!</h1>
+
+                            <p class="m-3 text-center">
+                                Our program is currently undergoing maintenance and will not be accessible
+                                for the time being. Please check back later.
+                            </p>
+                        </div>
+
+                        <div class="bg-light flex-column d-inline-flex justify-content-evenly align-center" style="width:100%; height: 49%">
+                            <h1>Login</h1>
+
+                            <div>
+                                <MudTextField Error="@error" @bind-Value="userName" Label="Enter Username" />
+
+                                <MudTextField Error="@error" Style="margin-bottom: 20%" @bind-Value="password" InputType="@InputType.Password" Label="Enter Password" />
+                            </div>
+
+                            <MudButton @onclick="VerifyAccount">Login</MudButton>
+                        </div>
+                    </MudPaper>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+}
+
+@code {
+    private bool error;
+
+    private string userName;
+
+    private string password;
+
+    private string displayName;
+    private Guid OrgID;
+    private string Role;
+
+    private InputType ApiInput = InputType.Password;
+
+    [CascadingParameter]
+    public bool isMobile { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthorisationService authService = (AuthorisationService)authState;
+
+        UserSession session = await authService.GetUserSessionAsync();
+
+        if(session is null)
+        {
+            return;
+        }
+
+        displayName = session.UserName;
+        OrgID = session.OrgId;
+        Role = session.Role;
+    }
+
+    private void RevealInput()
+    {
+        if(ApiInput == InputType.Password)
+        {
+            ApiInput = InputType.Text;
+        } else if(ApiInput == InputType.Text)
+        {
+            ApiInput = InputType.Password;
+        }
+    }
+
+    private async Task VerifyAccount()
+    {
+        //if(await userService.AuthenticateAccount(userName, password))
+        //{
+         //   AuthorisationService authService = (AuthorisationService)authState;
+
+          //  UserSession session = await userService.GetNewSession(userName, password);
+
+          //  await authService.UpdateAuthenticationState(session);
+
+          //  navManager.NavigateTo("dashboard");
+        //} else
+        //{
+          //  error = true;
+        //}
+        
+        Console.WriteLine("fetch login");
+
+        //error = true;
+    }
+}
+ 

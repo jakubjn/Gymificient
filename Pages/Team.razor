@@ -1,0 +1,78 @@
+﻿@page "/team"
+
+<PageTitle>Team</PageTitle>
+
+<h1 class="card-header text-center"> <strong>Meet the Team</strong> </h1>
+
+@if(!isMobile)
+{
+	<div class="team-section">
+		<div class="team-container">
+			<TeamPageCard Name="Udaiveer Parihar"
+						  Role="Biz-Ops"
+						  LinkedIn="https://www.linkedin.com/in/udaiveer-parihar-460272230/"
+						  GitHub="@null"
+						  Image="Images/Udaiveer.jpg">
+			</TeamPageCard>
+
+			<TeamPageCard Name="Jakub Janoska"
+						  Role="Front End"
+						  LinkedIn="https://www.linkedin.com/in/jakub-janoska-19a7b8313/"
+						  GitHub="https://github.com/jakubjn"
+						  Image="Images/Jakub.jpg">
+			</TeamPageCard>
+
+			<TeamPageCard Name="Nathan Manley"
+						  Role="Back End"
+						  LinkedIn="https://www.linkedin.com/in/nathan-manley/"
+						  GitHub="https://github.com/macmanley"
+						  Image="Images/Nathan.jpg">
+			</TeamPageCard>
+		</div>
+	</div>
+} else
+{
+	<div class="team-section">
+		<MudCarousel Style="width: 100%; height: 100%" AutoCycle ShowArrows TData="TeamPageCard">
+			<MudCarouselItem Transition="Transition.Fade" Class="d-flex align-center justify-content-center">
+				<TeamPageCard Name="Udaiveer Parihar"
+							  Role="Biz-Ops"
+							  LinkedIn="https://www.linkedin.com/in/udaiveer-parihar-460272230/"
+							  GitHub="@null"
+							  Image="Images/Udaiveer.jpg">
+				</TeamPageCard>
+			</MudCarouselItem>
+
+			<MudCarouselItem Transition="Transition.Fade" Class="d-flex align-center justify-content-center">
+				<TeamPageCard Name="Jakub Janoska"
+							  Role="Front End"
+							  LinkedIn="https://www.linkedin.com/in/jakub-janoska-19a7b8313/"
+							  GitHub="https://github.com/jakubjn"
+							  Image="Images/Jakub.jpg">
+				</TeamPageCard>
+			</MudCarouselItem>
+
+			<MudCarouselItem Transition="Transition.Fade" Class="d-flex align-center justify-content-center">
+				<TeamPageCard Name="Nathan Manley"
+							  Role="Back End"
+							  LinkedIn="https://www.linkedin.com/in/nathan-manley/"
+							  GitHub="https://github.com/macmanley"
+							  Image="Images/Nathan.jpg">
+				</TeamPageCard>
+			</MudCarouselItem>
+		</MudCarousel>
+	</div>
+}
+
+<div style="height: 10vh" class="text-center d-flex flex-column align-center justify-center">
+	<span class="big-text">
+		Want to chat? Contact us above!
+	</span>
+</div>
+
+
+
+@code {
+	[CascadingParameter]
+	public bool isMobile { get; set; }
+}

@@ -1,0 +1,25 @@
+﻿.team-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10vmin;
+
+    height: 80vh;
+    width: 100vw;
+}
+
+.team-container {
+    display: flex;
+    justify-content: center;
+    gap: 10vmin; 
+
+    width: 100%;
+}
+
+.big-text {
+    font-size: 2vmax;
+}
+
+.small-text {
+    font-size: 1.3vmax;
+}
