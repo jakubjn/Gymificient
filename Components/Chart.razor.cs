@@ -56,9 +56,10 @@ namespace GymSystem.Components
                     Responsive = true,
                     Scales = new
                     {
-                        y = new {
-                            Min = Min,
-                            Max = Max,
+                        y = new
+                        {
+                            Min,
+                            Max,
                         }
                     },
                     Plugins = new
@@ -79,13 +80,13 @@ namespace GymSystem.Components
                 {
                     Datasets = new[]
                     {
-                        new { 
-                            Data = Data, 
-                            BackgroundColor = BackgroundColor
+                        new {
+                            Data,
+                            BackgroundColor
                         }
                     },
 
-                    Labels = Labels
+                    Labels
                 }
             };
 

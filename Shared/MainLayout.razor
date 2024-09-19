@@ -9,7 +9,7 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<div class="page">
+<div class="@classDirection" style="position: relative; background-color: #EDEDED; display: flex">
     <CascadingValue Value="isMobile">
 
         @if(!isMobile)
@@ -19,7 +19,9 @@
             </div>
         } else
         {
-            <TopNavMenu />
+            <div class="topbar">
+                <TopNavMenu />
+            </div>
         }
 
         <main>
@@ -31,11 +33,19 @@
 @code {
     public bool isMobile { get; set; }
 
+    private string classDirection { get; set; } = "flex-row";
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if(firstRender)
         {
             isMobile = await js.InvokeAsync<bool>("mobileCheck");
+
+            if (isMobile)
+            {
+                classDirection = "flex-column";
+            }
+
             StateHasChanged();
         }
     }
